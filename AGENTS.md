@@ -1,9 +1,9 @@
 # AGENTS.md
 
 ## Commands
-- `npm run dev` - Start dev server
-- `npm run build` - Production build
-- `npm run preview` - Preview build
+- `pnpm run dev` - Start dev server
+- `pnpm run build` - Production build
+- `pnpm run preview` - Preview build
 
 ## Requirements
 - Node.js >= 22.12.0

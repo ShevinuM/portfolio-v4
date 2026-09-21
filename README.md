@@ -40,12 +40,12 @@ cd my-portfolio
 ### 2. Install Dependencies
 This project uses Node.js (requires **Node.js >= 22.12.0**).
 ```bash
-npm install
+pnpm install
 ```
 
 ### 3. Start Development Server
 ```bash
-npm run dev
+pnpm run dev
 ```
 Your local server will start at `http://localhost:4321`.
 
@@ -94,14 +94,14 @@ All configuration is managed centrally in the `src/config` directory. Modify the
 
 ## 🛠️ Build Commands
 
-All standard build commands run through `npm`:
+All standard build commands run through `pnpm`:
 
 | Command | Action |
 | :--- | :--- |
-| `npm run dev` | Starts the local development server on `localhost:4321` |
-| `npm run build` | Builds your project for production output into `./dist/` |
-| `npm run preview` | Previews your production build locally |
-| `npm run format` | Runs Prettier on all files to format code |
+| `pnpm run dev` | Starts the local development server on `localhost:4321` |
+| `pnpm run build` | Builds your project for production output into `./dist/` |
+| `pnpm run preview` | Previews your production build locally |
+| `pnpm run format` | Runs Prettier on all files to format code |
 
 ## 🤝 Contributing & License
 
