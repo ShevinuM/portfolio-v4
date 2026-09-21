@@ -66,6 +66,43 @@ Icons are SVG files in `src/assets/icons/`, auto-globbed by `src/assets/icons.ts
 dropping a new file into that directory is the whole wiring, and its filename is
 the name `SOCIAL_ICONS` refers to.
 
+## Deploying
+
+Pushing to `main` triggers `.github/workflows/deploy.yml`, which builds the site
+with `withastro/action@v3` and publishes it to GitHub Pages. The workflow also
+has a `workflow_dispatch` trigger, so it can be run manually from the Actions tab.
+
+CI installs with pnpm: the action detects `pnpm-lock.yaml` and installs the exact
+pnpm version pinned by `packageManager` in `package.json`. Nothing npm-related is
+involved.
+
+The workflow needs no changes, but three one-time steps are still yours to do,
+in the GitHub UI and at the DNS provider. The site will not be live at
+`shevinum.dev` until all three are done:
+
+1. Repo **Settings → Pages → Source** must be set to **GitHub Actions**, not
+   "Deploy from a branch".
+2. Repo **Settings → Pages → Custom domain** must be set to `shevinum.dev` and
+   saved. This step is required: when publishing from a custom Actions workflow,
+   GitHub ignores any `CNAME` file in the build output, so `public/CNAME` alone
+   does not set the domain. Enforce HTTPS can be ticked afterwards — it can take
+   up to 24 hours to become available.
+3. DNS at the registrar for the apex `shevinum.dev`: either an ALIAS/ANAME record
+   pointing at the Pages default domain, or four A records —
+   `185.199.108.153`, `185.199.109.153`, `185.199.110.153`, `185.199.111.153` —
+   and optionally the four AAAA records `2606:50c0:8000::153`,
+   `2606:50c0:8001::153`, `2606:50c0:8002::153`, `2606:50c0:8003::153`. Check
+   these against GitHub's docs:
+   <https://docs.github.com/en/pages/configuring-a-custom-domain-for-your-github-pages-site/managing-a-custom-domain-for-your-github-pages-site>
+
+`public/CNAME` exists and holds `shevinum.dev`; Astro copies it to `dist/CNAME`
+verbatim. It is a fallback that only matters if the publishing source is ever
+switched to "Deploy from a branch" — it plays no role in the current
+Actions-based setup.
+
+The site is fully static, with no adapter and no SSR, so there is no
+Cloudflare/worker configuration to maintain, and none is needed.
+
 ## Credits
 
 Built from the [academic-portfolio-astro](https://github.com/rubzip/academic-portfolio-astro)
