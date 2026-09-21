@@ -55,8 +55,3 @@ export interface Talk extends BasePage {
   event?: string;
   external_url?: string;
 }
-
-export interface Teaching extends BasePage {
-  institution?: string;
-  external_url?: string;
-}

@@ -26,11 +26,6 @@ export const PAGES: PagesConfig = {
         subtitle: "Open source contributions and technological experiments.",
         isActive: true,
     },
-    teaching: {
-        title: "Teaching",
-        subtitle: "Academic courses and educational materials.",
-        isActive: true,
-    },
     tags: {
         title: "Tags",
         subtitle: "Explore content by topic.",
