@@ -6,7 +6,7 @@ Status: **Q8 is open** — see the bottom of this file. It does not block deploy
 
 1. **Destination.** Build into `portfolio-v4`. `portfolio-v3` is left untouched as a working fallback.
 2. **Deploy target.** GitHub Pages.
-3. **GitHub Pages URL.** Custom domain `shevinum.dev` via a `public/CNAME` file. No base path.
+3. **GitHub Pages URL.** Custom domain `shevinum.dev`, no base path. **Correction, found by phase 04:** the original answer said "via a `public/CNAME` file". That premise was wrong. GitHub's own documentation is explicit — "If you are publishing from a custom GitHub Actions workflow, no CNAME file is created, and any existing CNAME file is ignored and is not required." The file was still created (it is harmless, and it is what a reader expects to find), but **the custom domain is set in Settings → Pages → Custom domain**, not by that file.
 4. **Talks section.** Keep it, with an empty listing. Only the Shannon demo talk is deleted.
 5. **Photos.** Drop the 9 travel photos. The template has no gallery and building one is out of scope. See `DEFERRED[H].md`.
 6. **Run mode.** Unattended, with permissions set to auto.

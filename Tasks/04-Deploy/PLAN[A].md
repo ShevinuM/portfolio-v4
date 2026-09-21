@@ -26,16 +26,49 @@ Read-only: everything else, including `src/`.
 1. GitHub Pages, custom domain `shevinum.dev`. Rejected: Cloudflare (developer's choice at the gate), and the project-page form `shevinum.github.io/<repo>/` (it would require keeping `base`, which changes every emitted link and invalidates phase 03's link checks).
 2. No Cloudflare artefacts are created. v3's `wrangler.jsonc` and `@astrojs/cloudflare` dependency are not carried forward.
 
+3. **Step 1b is settled: `withastro/action@v3` installs with pnpm 11.20.0 with the workflow exactly as it stands. No input is added and no `pnpm/action-setup` step is added.** Evidence is the action's own source at `https://raw.githubusercontent.com/withastro/action/v3/action.yml` (tag `v3`, commit `56781b97402ce0487b7e61ce2cb960c0e2cc5289`), fetched and read directly. Three lines settle it:
+   - Detection runs `pnpm-lock.yaml` **first**, before `yarn.lock` and `package-lock.json`, so a pnpm-only repo can never fall through to npm:
+     ```
+     elif [ $(find "." -maxdepth 1 -name "pnpm-lock.yaml") ]; then
+         echo "PACKAGE_MANAGER=pnpm" >> $GITHUB_ENV
+         echo "LOCKFILE=pnpm-lock.yaml" >> $GITHUB_ENV
+     ```
+   - The action embeds its own pnpm setup, so the caller does not add one:
+     ```
+     - name: Setup PNPM
+       if: ${{ env.PACKAGE_MANAGER == 'pnpm' }}
+       uses: pnpm/action-setup@v4
+       with:
+         version: ${{ env.VERSION }}
+         package_json_file: "${{ inputs.path }}/package.json"
+     ```
+   - In the pnpm branch `VERSION` is **never assigned** (only the npm and bun branches set `VERSION="latest"`), so line 61's `echo "VERSION=$VERSION" >> $GITHUB_ENV` writes an empty value. `pnpm/action-setup@v4` treats an empty `version` as falsy and falls through to reading `packageManager` from `package.json` — verified in its bundled `dist/index.js`, function `readTarget`: `if(t){...}` then `if(typeof d!=="string"){throw new Error("No pnpm version is specified...")}`. `package.json` has `"packageManager": "pnpm@11.20.0"`, so **pnpm 11.20.0** is what CI installs.
+   - Install and build are `$PACKAGE_MANAGER install` and `$PACKAGE_MANAGER run build`, i.e. `pnpm install` / `pnpm run build`. pnpm defaults to a frozen lockfile under `CI=true`, which is consistent with handoff ruling 4.
+   - `node-version` is a real v3 input (default `"20"`), so the existing `node-version: 24` is passed through to the action's embedded `actions/setup-node@v4` and is **not** silently ignored. The v3 input list is exactly three: `node-version`, `package-manager`, `path`.
+
+4. **Do NOT add `package-manager: pnpm` to the workflow as a belt-and-braces measure. It would break CI.** Reading the same `action.yml`, the explicit-input branch does two things the auto-detection branch does not:
+   ```
+   if [ $len -gt 1 ]; then
+     PACKAGE_MANAGER=$(echo "$INPUT_PM" | grep -o '^[^@]*')
+     VERSION=$(echo "$INPUT_PM" | { grep -o '@.*' || true; } | sed 's/^@//')
+     if [ -z "$VERSION" ]; then
+         VERSION="latest"
+     fi
+     echo "PACKAGE_MANAGER=$PACKAGE_MANAGER" >> $GITHUB_ENV
+   fi
+   ```
+   (a) It forces `VERSION="latest"` when no `@version` suffix is given. A non-empty `version` passed to `pnpm/action-setup@v4` alongside a `packageManager` field in `package.json` is the documented "Multiple versions of pnpm specified" hard failure. (b) It never sets `LOCKFILE`, so the later `cache-dependency-path: "${{ inputs.path }}/${{ env.LOCKFILE }}"` degrades to `./`. Auto-detection sets both variables correctly. **The safe configuration is the one already in the file — leave `deploy.yml` byte-for-byte unchanged.**
+
 ## Steps
 
-- [ ] 1. Read `.github/workflows/deploy.yml`. **Phase 03b already changed its `node-version:` line from 22 to 24** — that change is expected and correct, leave it. Nothing else in the file should differ from the template. Do not rewrite the file unless step 1b requires it.
-- [ ] 1b. Confirm the workflow will install with **pnpm**, not npm. `withastro/action@v3` detects the package manager from the lockfile, and `package.json` pins `"packageManager": "pnpm@11.20.0"` — but verify rather than assume. If the action needs an explicit input or a `pnpm/action-setup` step, add it and record a ruling. A workflow that runs `npm ci` against a repo with no `package-lock.json` fails on the developer's first push, and they will not see it until then.
-- [ ] 2. Create `/Users/shev/Development/portfolio-v4/public/CNAME` containing the single line `shevinum.dev`.
-- [ ] 3. Verify `astro.config.mjs` has `site: 'https://shevinum.dev'` and **no** `base` key. If phase 03 left either wrong, fix it here and note it in `DEVIATIONS[H].md`.
-- [ ] 4. Confirm no Cloudflare artefacts exist anywhere: no `wrangler.jsonc`, no `wrangler.toml`, no `@astrojs/cloudflare` or `wrangler` in `package.json`, no `adapter:` in `astro.config.mjs`.
-- [ ] 5. `pnpm run build` — must exit 0.
-- [ ] 6. Add a short **Deploying** section to `README.md`: push to `main` and the workflow publishes to GitHub Pages; the repo's Pages setting must use "GitHub Actions" as the source; the `shevinum.dev` DNS must point at GitHub Pages (apex A/ALIAS records) before the custom domain resolves.
-- [ ] 7. Commit as one unit, message ending with the trailer
+- [x] 1. Read `.github/workflows/deploy.yml`. **Phase 03b already changed its `node-version:` line from 22 to 24** — that change is expected and correct, leave it. Nothing else in the file should differ from the template. Do not rewrite the file unless step 1b requires it.
+- [x] 1b. Confirm the workflow will install with **pnpm**, not npm. `withastro/action@v3` detects the package manager from the lockfile, and `package.json` pins `"packageManager": "pnpm@11.20.0"` — but verify rather than assume. If the action needs an explicit input or a `pnpm/action-setup` step, add it and record a ruling. A workflow that runs `npm ci` against a repo with no `package-lock.json` fails on the developer's first push, and they will not see it until then.
+- [x] 2. Create `/Users/shev/Development/portfolio-v4/public/CNAME` containing the single line `shevinum.dev`.
+- [x] 3. Verify `astro.config.mjs` has `site: 'https://shevinum.dev'` and **no** `base` key. If phase 03 left either wrong, fix it here and note it in `DEVIATIONS[H].md`.
+- [x] 4. Confirm no Cloudflare artefacts exist anywhere: no `wrangler.jsonc`, no `wrangler.toml`, no `@astrojs/cloudflare` or `wrangler` in `package.json`, no `adapter:` in `astro.config.mjs`.
+- [x] 5. `pnpm run build` — must exit 0.
+- [x] 6. Add a short **Deploying** section to `README.md`: push to `main` and the workflow publishes to GitHub Pages; the repo's Pages setting must use "GitHub Actions" as the source; the `shevinum.dev` DNS must point at GitHub Pages (apex A/ALIAS records) before the custom domain resolves.
+- [x] 7. Commit as one unit, message ending with the trailer
       `Co-Authored-By: Claude Opus 5 (1M context) <noreply@anthropic.com>`
 
 ## Verification
@@ -55,11 +88,26 @@ Run from `/Users/shev/Development/portfolio-v4`:
 
 ## Acceptance criteria
 
-- [ ] All verification checks pass.
-- [ ] `public/CNAME` exists, holds `shevinum.dev`, and reaches `dist/CNAME` after a build.
-- [ ] README documents the deploy flow and the two manual steps the developer still owns (Pages source setting, DNS).
-- [ ] One commit, tree clean.
+- [x] All verification checks pass. Verifier returned PASS on all 19 checks.
+- [x] `public/CNAME` exists, holds `shevinum.dev`, and reaches `dist/CNAME` after a build. 13 bytes, byte-identical.
+- [x] README documents the deploy flow and the manual steps the developer still owns. **Three, not two** — ruling 5 supersedes this line: Pages source, Pages custom domain, DNS.
+- [x] One commit (`291166f`), tree clean outside `Tasks/`.
 
 ## Stop conditions
 
 Do not run a deployment. Do not create a GitHub repository, add a git remote, push anything, or change DNS. Do not install new dependencies. Configuration only.
+
+5. **A plan assumption is falsified: with a custom Actions workflow, GitHub ignores the `CNAME` file.** The Context section above says `public/CNAME` "lands at the root of the published site, which is what GitHub Pages reads". That is true only for *branch* publishing. Verified first-hand by fetching `https://docs.github.com/en/pages/configuring-a-custom-domain-for-your-github-pages-site/managing-a-custom-domain-for-your-github-pages-site` (HTTP 200) and extracting the sentence verbatim:
+
+   > Under "Custom domain", type your custom domain, then click Save. If you are publishing your site from a branch, this will create a commit that adds a CNAME file directly to the root of your source branch. **If you are publishing from a custom GitHub Actions workflow, no CNAME file is created, and any existing CNAME file is ignored and is not required.**
+
+   This repo publishes from a custom Actions workflow (`deploy.yml` → `withastro/action@v3` → `actions/deploy-pages@v4`), so the CNAME file is in the "ignored and not required" case.
+
+   **What is licensed as a result:**
+   - **Still create `public/CNAME`.** Rejected: skipping it. The developer chose it explicitly (`OPEN_QUESTIONS[H].md`, answered question 3), it costs one file, it is harmless under Actions publishing, and it is the correct artefact if the publishing source is ever switched to a branch. Deleting it would silently overturn a developer decision on a doc detail they have not seen.
+   - **The README must not claim the file is what sets the domain.** It states that the custom domain is set in **Settings → Pages → Custom domain**, and that the file is a fallback.
+   - **The manual-steps list is three items, not the plan's two.** (1) Settings → Pages → Source = GitHub Actions. (2) Settings → Pages → Custom domain = `shevinum.dev`, then Enforce HTTPS once available. (3) Apex DNS records. Record this in `DEVIATIONS[H].md`.
+   - **DNS values are quoted from GitHub's doc page, not from memory.** A records `185.199.108.153`, `185.199.109.153`, `185.199.110.153`, `185.199.111.153`. AAAA records `2606:50c0:8000::153`, `2606:50c0:8001::153`, `2606:50c0:8002::153`, `2606:50c0:8003::153`. All four of each verified in the fetched page.
+   - Enforce HTTPS: the doc says only "It can take up to 24 hours before this option is available." It states no explicit "DNS must resolve first" precondition, so the README must not invent one.
+
+   **What would make this re-break:** writing a README that tells the developer the CNAME file alone is enough. They would push, the site would serve on `<user>.github.io`, the apex would not resolve, and nothing in the repo would explain why.

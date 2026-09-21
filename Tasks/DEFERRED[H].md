@@ -35,6 +35,8 @@
 
 15. **13 TypeScript errors, now visible for the first time.** `pnpm run check` exists and exits 1. All 13 predate this run — the strict tsconfig had simply never been enforced. They cluster in five files: `ContentLinks.astro` (a `DisplayLink.external` property that is not on the type), `BaseLayout.astro` (`ANALYTICS.umami` possibly undefined, ×3), `posts/[id].astro` (a `readingTime` prop the component does not declare, and `new Date(undefined)` ×2), and `tags/[tag].astro` (six properties read off a union that does not have them). The build does not care, and the check is deliberately NOT in CI. Full output with code frames is in `Tasks/03b-Dependencies/Results/NOT_DONE[H].md`.
 
+20. **The README says the site is live when it is not.** `README.md` lines 4–5 claim the site is "live at https://shevinum.dev". Nothing is published yet — the repo has no git remote. Phase 04's README scope was the deploy section only, so it left the line alone and flagged it. Fix it, or leave it until the site actually is live.
+
 ## Dropped, no decision needed
 
 16. **Photo gallery.** portfolio-v3 has a "My Recent Travels" section with 9 photos in `portfolio-v3/public/photos/`. The new template has no gallery route or component. Dropped on 2026-09-22 by your decision. The photos still exist in v3 if you want a gallery later — it would mean a new collection, a new route and a new component.
