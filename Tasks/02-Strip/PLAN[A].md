@@ -86,7 +86,7 @@ Run from `/Users/shev/Development/portfolio-v4`:
 | notepad theme live | `grep -o "#fdf8e9\|#241f1c" dist/index.html` | both present |
 | Shannon gone | `grep -rni "shannon\|bell-labs\|petoskey" . --exclude-dir=node_modules --exclude-dir=.git --exclude-dir=dist --exclude-dir=Tasks` | only `src/content/bio.md` and `src/content/cv.md` may hit (phase 03 rewrites them); `LICENSE` may hit on an unrelated name |
 | example contents gone | `test ! -d example_contents` | pass |
-| clean tree | `git status --short` | empty |
+| clean tree | `git -C /Users/shev/Development/portfolio-v4 status --short -- . ':(exclude)Tasks'` | empty — **use this exact form**, see Context |
 
 ## Acceptance criteria
 

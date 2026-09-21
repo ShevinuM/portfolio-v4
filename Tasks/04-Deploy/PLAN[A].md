@@ -48,7 +48,7 @@ Run from `/Users/shev/Development/portfolio-v4`:
 | site URL correct | `grep -c "https://shevinum.dev" dist/sitemap-0.xml` | ≥ 1 |
 | no base path | `grep -c "/academic-portfolio-astro/" dist/index.html` | 0 |
 | no adapter | `grep -c "adapter" astro.config.mjs` | 0 |
-| clean tree | `git status --short` | empty |
+| clean tree | `git -C /Users/shev/Development/portfolio-v4 status --short -- . ':(exclude)Tasks'` | empty — **use this exact form**. A bare `git status --short` always shows `Tasks/` churn that the protocol itself requires, and would FAIL spuriously. |
 
 ## Acceptance criteria
 

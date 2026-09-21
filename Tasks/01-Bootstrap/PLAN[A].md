@@ -31,6 +31,8 @@ Read-only for this phase:
    Alternatives rejected: (a) add `Tasks/` to `.gitignore` — contradicts ruling in step 4, the plan history is meant to live with the work; (b) stop writing `WHATS_HAPPENING[H].md` until after verification — it is the developer's only window during an unattended run, and a missing transition reads as a stall; (c) re-commit after every status line — turns one baseline commit into many and defeats the one-commit phase. Constraint that would make this re-break: if a later check reverts to a bare `status --short`, it fails again for the same reason. The exclusion is scope-correct, not a workaround.
 4. `.memsearch/` is excluded only by the machine-local `~/.gitignore_global`; `.remember/` self-excludes via its own `.gitignore` containing `*`. Neither is added to the repo `.gitignore` in this phase — the stop condition forbids config edits, and `git add -A` already leaves both untracked. Consequence carried forward: a fresh clone on another machine would see `.memsearch/` as untracked.
 5. `git config --global user.name` is unset. Git derives `Shevinu Nawalage <105614862+ShevinuM@users.noreply.github.com>` from the OS and commits succeed (probed in a throwaway repo, exit 0). No git config is set by this phase. Rejected: setting `user.name` — not in the plan and not needed.
+6. **The `package-lock.json` rewrite by `npm install` is accepted, not reverted.** Root cause: npm 11.19.1 dropped a 15-line `node_modules/typescript` entry (`5.9.3`, `optional: true, peer: true`) when resolving the template lockfile. It is the only file in the whole tree that differs from template `6f296c2`; `package.json` and `.gitignore` are byte-identical. Licensed: commit npm's output as-is. Alternatives rejected: (a) `git checkout` the template lockfile after install — it would be re-dropped on the next `npm install` and re-dirty the tree forever; (b) pin typescript in `package.json` — a config edit, forbidden by this phase's stop condition. Verified stable: a second from-clean `npm install` did not perturb it again, so the lockfile is now a fixed point. Constraint carried forward: **`node_modules/typescript` is therefore absent.** `tsc` and `astro check` will not run in phases 02–04 without an explicit `npm i -D typescript`. That install is licensed for a later phase, not this one.
+7. **Phase 01 does not commit its own `Results/` files.** Root cause: acceptance criterion 2 requires exactly one commit, and `Results/` and the final `WHATS_HAPPENING[H].md` are written after that commit by definition. Licensed: leave the phase-close `Tasks/` churn uncommitted. Disposition belongs to the main session — it will dirty `Tasks/` further when it writes `HANDOFF[A].md` and flips `QUEUE[A].md`, so it is the natural owner of either a separate task-state commit or a decision to let phase 02 sweep it. Phase 01 does not prescribe phase 02's behaviour. Alternative rejected: a second "close phase 01" commit — it breaks the one-commit acceptance criterion the verifier just passed. Constraint: whoever runs phase 02 inherits a tree that is clean outside `Tasks/` but dirty inside it, and must not read that as a failed handoff.
 
 ## Steps
 
@@ -63,11 +65,11 @@ Read-only for this phase:
 
 ## Acceptance criteria
 
-- [ ] v4 contains the full template tree and no `.git` inherited from upstream.
-- [ ] `git log` shows exactly one commit and `git remote -v` is empty.
-- [ ] `npm run build` exits 0 and produces `dist/index.html`.
-- [ ] `git status --short` is empty.
-- [ ] `Tasks/` is intact and committed.
+- [x] v4 contains the full template tree and no `.git` inherited from upstream.
+- [x] `git log` shows exactly one commit and `git remote -v` is empty.
+- [x] `npm run build` exits 0 and produces `dist/index.html`.
+- [x] `git status --short` is empty. (Evaluated per ruling 3, excluding `Tasks/`.)
+- [x] `Tasks/` is intact and committed. (15 files, bracket filenames intact.)
 
 ## Stop conditions
 

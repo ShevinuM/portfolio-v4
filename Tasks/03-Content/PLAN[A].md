@@ -93,7 +93,7 @@ Run from `/Users/shev/Development/portfolio-v4`:
 | no base path in links | `grep -c "/academic-portfolio-astro/" dist/index.html` | 0 |
 | avatar resolves | `ls dist/_astro/ \| grep -i picofme` or confirm the `<img>` src in `dist/index.html` points at an existing file | pass |
 | nav links resolve | for each href in `src/config/navigation.ts`, the matching `dist/<path>/index.html` exists | all pass |
-| clean tree | `git status --short` | empty |
+| clean tree | `git -C /Users/shev/Development/portfolio-v4 status --short -- . ':(exclude)Tasks'` | empty — **use this exact form**. A bare `git status --short` always shows `Tasks/` churn that the protocol itself requires, and would FAIL spuriously. |
 
 ## Acceptance criteria
 

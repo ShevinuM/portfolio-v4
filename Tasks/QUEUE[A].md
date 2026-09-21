@@ -9,7 +9,7 @@ Mode: unattended. Questions go to `OPEN_QUESTIONS[H].md` and the phase returns B
 
 | # | Phase | Scope | Goal | Status |
 |---|-------|-------|------|--------|
-| 01 | Bootstrap | repo root of v4 | Template copied without upstream `.git`, repo initialised, deps installed, baseline build green. | NOT STARTED |
+| 01 | Bootstrap | repo root of v4 | Template copied without upstream `.git`, repo initialised, deps installed, baseline build green. | **CLOSED — PASS** (`04b3c6e`) |
 | 02 | Strip | `src/`, `public/`, `example_contents/`, root docs | Teaching, dev-tools/Settings icon, Shannon demo content and the `©` line are gone. Talks kept but empty. Notepad theme on both modes. Build green. | NOT STARTED |
 | 03 | Content | `src/content/`, `src/config/`, `public/`, `astro.config.mjs`, `README.md`, `package.json` | Shevinu's bio, CV, NER publication, blog article, Digest project and site metadata are live. Build green. | NOT STARTED |
 | 04 | Deploy | `.github/`, `public/CNAME`, `astro.config.mjs`, `README.md` | GitHub Pages deploy at the custom domain `shevinum.dev`. Build green. | NOT STARTED |
