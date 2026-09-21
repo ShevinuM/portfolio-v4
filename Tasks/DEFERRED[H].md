@@ -2,7 +2,10 @@
 
 ## Waiting on a decision from you
 
-1. **Astro 6 → 7.** Phase 03b updates Astro to `6.4.8`, which clears the critical advisory. Astro `7.3.3` is a major release with breaking changes. It was deliberately not done overnight — a framework migration on a site whose content landed hours earlier makes any breakage impossible to attribute. Decide when you are around to look at the result.
+1. **Astro 6 → 7. THIS IS NOW THE OPEN QUESTION Q8 — see `OPEN_QUESTIONS[H].md`.**
+   The plan's premise was wrong and phase 03b caught it: **the critical advisory is NOT fixable in-range.** GHSA-26w7-cxv4-gfx2 (remote code execution through AVIF image optimization) is patched only at Astro **`>=7.2.8`**. The in-range update to 6.4.8 did clear five other real advisories, including an XML-injection flaw in `@astrojs/rss` — but not that one.
+   Astro `7.3.3` is a major with breaking changes, and the migration will have to touch `astro.config.mjs`: it emits a 6.x deprecation on every check run, because `markdown.remarkPlugins` / `rehypePlugins` / `remarkRehype` are superseded by `unified({...})` from `@astrojs/markdown-remark` — and that is exactly the block wiring up `remark-math` and `rehype-katex`.
+   **On real exposure:** the site is fully static. There is no `output` or `adapter`, so no request-time `/_image` endpoint exists in production, and the only `astro:assets` use is your own avatar JPEG. Read the GitHub advisory yourself before deciding — phase 03b deliberately did not characterise the attack vector, because the advisory record pnpm returns carries no description text and it refused to guess.
 
 2. **KaTeX 0.16 → 0.18.** Same reasoning. `0.16.47` is what phase 03b installs.
 
@@ -16,7 +19,7 @@
 
 7. **The README documents a `format` script that does not exist.** `README.md:104` tells a reader to run `pnpm run format`, but `package.json` declares no such script. A pre-existing template defect — phase 02b converted the command verbatim rather than inventing a script, which was correct. Either add a formatter (the template has no prettier config either) or drop the line. Phase 03 rewrites the README and will not carry the false claim forward.
 
-8. **Your avatar renders 1 pixel wide.** `src/components/layout/LeftSidebar.astro:19` has a stray comment inside the `<img>` tag, so it emits `width="1"`. Pre-existing template bug, one-line fix, and it is visible on every page. **Worth doing before you deploy.** No phase in this run owns `src/components/`, which is why it is here rather than assigned.
+8. **Your avatar renders 1 pixel wide.** `src/components/layout/LeftSidebar.astro` **line 18** — a `/* ... */` comment sits inside the `width={160}` attribute of an `<Image>` component, so it emits `width="1"`. Pre-existing template bug, one-line fix, visible on every page. **Worth doing before you deploy.** No phase in this run owns `src/components/`, which is why it is here rather than assigned. Note `astro check` does NOT catch it — a malformed template attribute is not a type error.
 
 9. **`/favicon.ico` 404s.** The template's `favicon.ico` was deleted and `SITE.favicon` points at the `.svg`, but browsers still probe `/favicon.ico` by default. Harmless, noisy in logs.
 
@@ -30,14 +33,16 @@
 
 14. **A purpose-built OG card.** Your social-share image is currently your portrait (`picofme.jpeg`), which works but is not a designed 1200×630 card. See `Tasks/03-Content/Results/DEVIATIONS[H].md` for why v3's `og_image.png` was not reused.
 
+15. **13 TypeScript errors, now visible for the first time.** `pnpm run check` exists and exits 1. All 13 predate this run — the strict tsconfig had simply never been enforced. They cluster in five files: `ContentLinks.astro` (a `DisplayLink.external` property that is not on the type), `BaseLayout.astro` (`ANALYTICS.umami` possibly undefined, ×3), `posts/[id].astro` (a `readingTime` prop the component does not declare, and `new Date(undefined)` ×2), and `tags/[tag].astro` (six properties read off a union that does not have them). The build does not care, and the check is deliberately NOT in CI. Full output with code frames is in `Tasks/03b-Dependencies/Results/NOT_DONE[H].md`.
+
 ## Dropped, no decision needed
 
-6. **Photo gallery.** portfolio-v3 has a "My Recent Travels" section with 9 photos in `portfolio-v3/public/photos/`. The new template has no gallery route or component. Dropped on 2026-09-22 by your decision. The photos still exist in v3 if you want a gallery later — it would mean a new collection, a new route and a new component.
+16. **Photo gallery.** portfolio-v3 has a "My Recent Travels" section with 9 photos in `portfolio-v3/public/photos/`. The new template has no gallery route or component. Dropped on 2026-09-22 by your decision. The photos still exist in v3 if you want a gallery later — it would mean a new collection, a new route and a new component.
 
-7. **Project demo videos.** v3 links two R2-hosted mp4 demos. No template content schema has a video field, so they have no home. The URLs are preserved here:
+17. **Project demo videos.** v3 links two R2-hosted mp4 demos. No template content schema has a video field, so they have no home. The URLs are preserved here:
    - NER: `https://pub-242f479808604bc19262827ef055097f.r2.dev/subsea_ner_framework_polished.mp4`
    - Digest: `https://pub-242f479808604bc19262827ef055097f.r2.dev/daily-tech-digest-demo.mp4`
 
-8. **SpideyHub project.** Commented out in v3's `resume.tsx`, so it was already disabled. Not carried over.
+18. **SpideyHub project.** Commented out in v3's `resume.tsx`, so it was already disabled. Not carried over.
 
-9. **Blog search box.** Asked for on 2026-09-22 and withdrawn a minute later. Nothing was written. The template ships no search of any kind; adding one would mean a new component, a client-side index and styling in `global.css`.
+19. **Blog search box.** Asked for on 2026-09-22 and withdrawn a minute later. Nothing was written. The template ships no search of any kind; adding one would mean a new component, a client-side index and styling in `global.css`.
