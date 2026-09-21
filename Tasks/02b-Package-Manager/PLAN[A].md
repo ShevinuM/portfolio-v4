@@ -52,28 +52,28 @@ Read-only: `Tasks/`, the rest of `src/`, `public/`, `astro.config.mjs`, `LICENSE
       find dist -name '*.html' | wc -l
       ```
       Note the page count. It must not change across the switch.
-- [ ] 2. **`pnpm import` FIRST, while `package-lock.json` still exists** (ruling 4). This generates `pnpm-lock.yaml` from npm's already-resolved tree instead of re-resolving every range. It regenerates deterministically in about 10 seconds; the previous run produced md5 `f25de839628c5ef1f30bfd6b430b8fe7` and a copy is at `/private/tmp/claude-501/-Users-shev-Development-portfolio-v4/b943f36f-95a2-4570-ac0b-d73145bfbfa8/scratchpad/pnpm-lock.yaml.verified`.
+- [x] 2. **`pnpm import` FIRST, while `package-lock.json` still exists** (ruling 4). This generates `pnpm-lock.yaml` from npm's already-resolved tree instead of re-resolving every range. It regenerates deterministically in about 10 seconds; the previous run produced md5 `f25de839628c5ef1f30bfd6b430b8fe7` and a copy is at `/private/tmp/claude-501/-Users-shev-Development-portfolio-v4/b943f36f-95a2-4570-ac0b-d73145bfbfa8/scratchpad/pnpm-lock.yaml.verified`.
       A bare `pnpm install` here would resolve `astro` `^6.1.7` to 6.4.8 and drift several other packages — the exact failure this phase must not produce.
-- [ ] 3. Now delete `/Users/shev/Development/portfolio-v4/package-lock.json` and `rm -rf /Users/shev/Development/portfolio-v4/node_modules`.
-- [ ] 4. Add `"packageManager": "pnpm@11.20.0"` to `package.json`, directly after `"engines"`. Change nothing else in that file. Do not touch `name` — phase 03 owns it.
-- [ ] 4b. Write `/Users/shev/Development/portfolio-v4/pnpm-workspace.yaml` (ruling 11):
+- [x] 3. Now delete `/Users/shev/Development/portfolio-v4/package-lock.json` and `rm -rf /Users/shev/Development/portfolio-v4/node_modules`.
+- [x] 4. Add `"packageManager": "pnpm@11.20.0"` to `package.json`, directly after `"engines"`. Change nothing else in that file. Do not touch `name` — phase 03 owns it.
+- [x] 4b. Write `/Users/shev/Development/portfolio-v4/pnpm-workspace.yaml` (ruling 11):
       ```yaml
       allowBuilds:
         esbuild: false
         sharp: false
       ```
       This is required, not conditional. Without it `pnpm install` exits 1 with `ERR_PNPM_IGNORED_BUILDS`, and so does every `pnpm run` script.
-- [ ] 4c. Fix the undeclared `zod` import (ruling 10). In `src/content.config.ts`, change **line 3 only**:
+- [x] 4c. Fix the undeclared `zod` import (ruling 10). In `src/content.config.ts`, change **line 3 only**:
       `import { z } from 'zod';` → `import { z } from 'astro/zod';`
       Touch nothing else in that file and nothing else under `src/`.
-- [ ] 5. `cd /Users/shev/Development/portfolio-v4 && pnpm install --frozen-lockfile` — must exit 0. The `--frozen-lockfile` flag is what proves the imported resolutions are satisfiable without re-resolution. **If it refuses the install, that is a finding to report, not a cue to drop the flag.**
-- [ ] 5b. `cd /Users/shev/Development/portfolio-v4 && pnpm run build` — must exit 0 and produce **8 HTML pages**, the same as the step-1 baseline.
-- [ ] 6. Confirm `.gitignore` still covers `node_modules/`. pnpm needs no extra ignore entries for this project — there is no local store directory inside the repo.
-- [ ] 7. Update the commands in `README.md` and `AGENTS.md`: every `npm install` → `pnpm install`, every `npm run <x>` → `pnpm run <x>`.
+- [x] 5. `cd /Users/shev/Development/portfolio-v4 && pnpm install --frozen-lockfile` — must exit 0. The `--frozen-lockfile` flag is what proves the imported resolutions are satisfiable without re-resolution. **If it refuses the install, that is a finding to report, not a cue to drop the flag.**
+- [x] 5b. `cd /Users/shev/Development/portfolio-v4 && pnpm run build` — must exit 0 and produce **8 HTML pages**, the same as the step-1 baseline.
+- [x] 6. Confirm `.gitignore` still covers `node_modules/`. pnpm needs no extra ignore entries for this project — there is no local store directory inside the repo.
+- [x] 7. Update the commands in `README.md` and `AGENTS.md`: every `npm install` → `pnpm install`, every `npm run <x>` → `pnpm run <x>`.
       **Known straggler both of the plan's original greps missed: `README.md` line 97**, ``All standard build commands run through `npm`:`` — the word is inside backticks, not followed by a space. Convert it.
       **Use this grep, not the original one:** `grep -rnE '(^|[^p])npm' README.md AGENTS.md DESIGN-GUIDE.md`. The naive `grep "npm run"` false-passes *and* false-fails, because `npm run` is a substring of `pnpm run`.
       Leave `.github/workflows/deploy.yml` alone — phase 04 owns it.
-- [ ] 8. Commit as one unit. Message names both halves — the lockfile swap and the docs — and ends with
+- [x] 8. Commit as one unit. Message names both halves — the lockfile swap and the docs — and ends with
       `Co-Authored-By: Claude Opus 5 (1M context) <noreply@anthropic.com>`
 
 ## Verification
@@ -122,3 +122,28 @@ Do not change any dependency version, add a dependency, or run `pnpm update` / `
 9. **The plan's own doc-verification greps false-fail on a CORRECT conversion.** Root cause: `npm run` is a substring of `pnpm run`. After step 7 converts the docs, the verification row `grep -rn "npm install\|npm run" README.md AGENTS.md DESIGN-GUIDE.md` matches every converted line, and step 7's straggler grep `grep -rn "npm "` does the same. A correct tree would be failed by its own check.
    Replacement to use instead: `grep -rnE '(^|[^p])npm' README.md AGENTS.md DESIGN-GUIDE.md` — expected output: none.
    Also note **README line 97**, ``All standard build commands run through `npm`:`` — a real straggler that BOTH the original greps miss, because `npm` is followed by a backtick rather than a space. It is in scope and must be converted. The doc half of this phase was never started; no doc edits were made.
+
+12. **The verification row "only that line changed in src" is written against the wrong base and would spuriously FAIL a correct commit.** Root cause: `git diff HEAD --stat -- src/` compares the working tree to `HEAD`. Once the phase's single commit lands, `HEAD` *is* that commit, so the diff is empty and the row's expected `src/content.config.ts | 2 +-` never appears. The row silently only works before the commit exists.
+    **Licensed correction (orchestrator, before dispatch):** the check is `git diff 6d8a8bc HEAD --stat -- src/`, where `6d8a8bc` is the pre-phase HEAD. Expected output: exactly `src/content.config.ts | 2 +-` and nothing else. The acceptance criterion "exactly one line under `src/` changed" is judged against the same base.
+    Alternatives rejected: running the row before committing — it then cannot be re-checked after the fact, and the verifier only ever sees a committed tree (§3 of the protocol forbids verifying a dirty tree).
+    Constraint that would make this re-break: if this phase ever produces more than one commit, the base is the phase's first parent, not a hard-coded sha.
+
+13. **Docs inventory, captured at `6d8a8bc` before any edit — `DESIGN-GUIDE.md` is clean, so the plan's scope holds.** Root cause of the concern: the verification table greps `DESIGN-GUIDE.md`, which is *not* in this phase's scope; a hit there would be an unfixable check. It has zero hits, so no scope defect exists.
+    The full inventory (`grep -rniE '(^|[^p])npm|npx|package-lock' README.md AGENTS.md DESIGN-GUIDE.md`, broadened beyond the plan's grep to catch uppercase `NPM`, `npx`, and lockfile prose) is exactly **10 lines**, all in scope:
+    `AGENTS.md:4,5,6` (`npm run dev|build|preview`); `README.md:43` (`npm install`), `:48` (`npm run dev`), `:97` (the backticked straggler), `:101,102,103,104` (the command table).
+    No `npmjs.com` URL, no `npx` invocation, no `package-lock` prose exists anywhere in the three files — so after conversion the plan's `(^|[^p])npm` grep has no legitimate false positive to tolerate, and its expected output really is empty.
+    Constraint that would make this re-break: adding an `npmjs.com` link to any of the three docs later makes the verification grep fail on a correct tree; it would then need an explicit exclusion.
+
+14. **Three pre-existing conditions the pnpm build surfaces. None is a regression, and none is this phase's to fix — recorded so no later phase mistakes them for breakage caused by the tool swap.**
+    (a) **`pnpm run build` prints `The collection "posts"/"publications"/"projects"/"talks" does not exist or is empty` and still exits 0.** Cause: phase 02 emptied those four directories; each holds only a `.gitkeep`. The only real content files are `src/content/cv.md` and `src/content/bio.md`. The npm build printed the same warnings. Phase 03 refills three of the four.
+    (b) **`README.md:104` documents `pnpm run format`, but `package.json` declares no `format` script.** A template defect that predates this phase; ruling 13's inventory listed the line, so it was converted verbatim rather than fixed. Converting it was correct — deleting or rewriting the row is a docs decision this phase does not own. Candidate for `DEFERRED[H].md`.
+    (c) **`pnpm install` reports `Packages: +294` while the lockfile holds 388 entries.** Not a discrepancy: the 94-entry gap is platform-optional packages (linux/windows `@esbuild/*` and `@img/sharp-*`) that darwin-arm64 does not install. npm's lockfile enumerates them too, which is why the like-for-like comparison is lockfile-to-lockfile, never installed-count-to-installed-count.
+    Constraint that would make (a) re-break its own diagnosis: once phase 03 adds content, a *remaining* "does not exist or is empty" warning for a refilled collection would be real breakage, not this known noise. Only `talks` is expected to keep warning.
+
+15. **Gate results, run by the orchestrator against the committed tree at `172b8bb`.** `pnpm install --frozen-lockfile` exit 0; `pnpm run build` exit 0, 8 HTML pages, page *list* identical to the npm baseline file-for-file. `pnpm-lock.yaml` md5 `f25de839628c5ef1f30bfd6b430b8fe7` before install, after install, after build, after a from-scratch reinstall, and after a from-scratch build — five samples, no silent mutation. No-drift diff: 388 npm keys (from `b34a577:package-lock.json`, md5 `276d52fa6aa1bca4861d2b437d39ba6b`) vs 388 pnpm `packages:` keys, **zero diff lines**; `astro@6.1.7` on both sides; `typescript` on neither side and absent from `node_modules`. Clean-reinstall proof (`rm -rf node_modules dist`, then frozen install + build) exit 0 / exit 0 / 8 pages. Tree clean outside `Tasks/` after every gate.
+    Raw logs: `/private/tmp/claude-501/-Users-shev-Development-portfolio-v4/b943f36f-95a2-4570-ac0b-d73145bfbfa8/scratchpad/G-*.log` and `G-*.txt`.
+
+16. **The npm `packages` object has 389 keys, not 388 — the extra one is npm's root `""` self-entry.** Raised by the verifier, which independently re-derived both key sets from git objects and reproduced the zero-diff result. Named packages are 388, which is the number every equivalence claim in this phase refers to.
+    Recorded so a later reader who counts raw JSON keys sees 389, does not read it as drift, and does not re-open a settled proof. Any future re-derivation must drop the `""` key before comparing.
+
+17. **VERDICT: PASS.** Verifier checked all 16 cheap rows plus the five captured gates against commit `172b8bb`, and independently reproduced the central no-drift proof from git objects (388 vs 388, zero lines; its own key sets byte-identical to the orchestrator's). All five acceptance criteria met. No stop condition violated. Zero fix rounds.

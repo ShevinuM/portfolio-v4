@@ -14,6 +14,8 @@
 
 6. **`zod` is used but never declared.** `src/content.config.ts` imports it, and `package.json` does not list it. npm's flat `node_modules` made that work by accident; pnpm's strict layout broke it, which is how it was found. Phase 02b routed around it with `import { z } from 'astro/zod'` — correct and proven, and it keeps that phase's no-drift guarantee. The straightforwardly honest fix is `"zod": "^4.3.6"` in `dependencies`, which you may prefer. This is a bug in the upstream template, not something the rebuild introduced.
 
+7. **The README documents a `format` script that does not exist.** `README.md:104` tells a reader to run `pnpm run format`, but `package.json` declares no such script. A pre-existing template defect — phase 02b converted the command verbatim rather than inventing a script, which was correct. Either add a formatter (the template has no prettier config either) or drop the line. Phase 03 rewrites the README and will not carry the false claim forward.
+
 ## Dropped, no decision needed
 
 6. **Photo gallery.** portfolio-v3 has a "My Recent Travels" section with 9 photos in `portfolio-v3/public/photos/`. The new template has no gallery route or component. Dropped on 2026-09-22 by your decision. The photos still exist in v3 if you want a gallery later — it would mean a new collection, a new route and a new component.

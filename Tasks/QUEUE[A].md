@@ -11,7 +11,7 @@ Mode: unattended. Questions go to `OPEN_QUESTIONS[H].md` and the phase returns B
 |---|-------|-------|------|--------|
 | 01 | Bootstrap | repo root of v4 | Template copied without upstream `.git`, repo initialised, deps installed, baseline build green. | **CLOSED — PASS** (`04b3c6e`) |
 | 02 | Strip | `src/`, `public/`, `example_contents/`, root docs | Teaching, dev-tools/Settings icon, Shannon demo content and the `©` line are gone. Talks kept but empty. Notepad theme on both modes. Build green. | **CLOSED — PASS** (`8a76635`, `1cb7d6a`, `c574460`, `fe03d22`) |
-| 02b | Package manager | `package.json`, lockfiles, `README.md`, `AGENTS.md` | npm replaced by pnpm. One lockfile, same dependency versions, build green, docs updated. Added mid-run at the developer's request. | NOT STARTED |
+| 02b | Package manager | `package.json`, lockfiles, `README.md`, `AGENTS.md` | npm replaced by pnpm. One lockfile, same dependency versions, build green, docs updated. Added mid-run at the developer's request. | **CLOSED — PASS** (`172b8bb`) |
 | 03 | Content | `src/content/`, `src/config/`, `public/`, `astro.config.mjs`, `README.md`, `package.json` | Shevinu's bio, CV, NER publication, blog article, Digest project and site metadata are live. Build green. | NOT STARTED |
 | 03b | Dependencies | `package.json`, `pnpm-lock.yaml`, `.nvmrc`, the `node-version:` line of `deploy.yml`, docs | All 9 packages updated in-range (clears the critical Astro advisory), Node 24 pinned, `typescript` + `pnpm run check` added. Added mid-run. | NOT STARTED |
 | 04 | Deploy | `.github/`, `public/CNAME`, `astro.config.mjs`, `README.md` | GitHub Pages deploy at the custom domain `shevinum.dev`. Build green. | NOT STARTED |

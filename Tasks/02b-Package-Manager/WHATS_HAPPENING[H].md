@@ -1,33 +1,36 @@
 # Phase 02b — Switch to pnpm
 
-Status: **BLOCKED. Needs one answer from you.** No commit was made. The repo is back at `b34a577`, clean.
+Status: **CLOSED. Verifier said PASS.** One commit, zero fix rounds. Nothing is waiting on you.
 
-## The question — `Tasks/OPEN_QUESTIONS[H].md`, Q7
+## What landed
 
-`src/content.config.ts` line 3 imports `zod`, but `zod` is not in `package.json`. npm hid this because it puts everything in one flat folder. pnpm only exposes what you declared, so the import fails and the build stops.
+`172b8bb` — *Switch package manager from npm to pnpm*
 
-Pick one:
-- **(a) Recommended.** Change that one line to `import { z } from 'astro/zod';`. No dependency added. I verified `astro/zod` gives the same `zod@4.3.6` the code already uses. It needs your OK because `src/` is outside this phase.
-- **(b)** Add `"zod": "^4.3.6"` to `package.json`. Honest, but it contradicts this phase's "add no dependency" rule.
+1. **The repo runs on pnpm.** One lockfile, `pnpm-lock.yaml`. `package-lock.json` is gone.
+2. **No package moved. 388 before, 388 after, zero differences.** `astro` is still 6.1.7. That was the whole risk and it is closed.
+3. **Build is green at 8 HTML pages** — the same 8 files the npm build made.
+4. **Tool pinned** as `"packageManager": "pnpm@11.20.0"`, which phase 04's CI will read.
+5. **Your Q7 answer applied**: one line of `src/content.config.ts` now imports `astro/zod`. Exactly one line under `src/` changed.
+6. **Docs converted** — all 10 npm references in `README.md` and `AGENTS.md`, including the backticked one on README line 97.
 
-Full detail and the rejected options are in `Tasks/OPEN_QUESTIONS[H].md`.
-
-## What is already proven — none of this needs redoing
-
-1. **No version drift. 388 packages, zero differences.** This was the main risk. `pnpm import` copies npm's exact resolutions, so `astro` stays at 6.1.7 and nothing moved. I ran the lockfile-to-lockfile diff myself.
-2. **`pnpm install --frozen-lockfile` exits 0.** pnpm 11 refuses to install until you decide about build scripts. Writing `allowBuilds: {esbuild: false, sharp: false}` into `pnpm-workspace.yaml` settles it. That is a denial — the same thing npm did in practice, and the same thing portfolio-v3 does.
-3. **`packageManager: "pnpm@11.20.0"`** slots into `package.json` as a single added line.
-
-Only the build gate and the README/AGENTS.md wording are left.
+Full detail in `Results/COMPLETED[H].md`.
 
 ## Timeline
 
-- 02:41 — baseline captured. `npm run build` green, **8 HTML pages**.
-- 02:45 — added ruling 4 to the plan, then dispatched the executor. The plan's original order would have let pnpm pick newer versions. `pnpm import` prevents that.
-- 02:51 — executor returned BLOCKED, no commit, after finding the `zod` problem.
-- 02:56 — I confirmed every finding myself, fixed the build-script blocker, and proved `zod` is the only thing left.
-- 02:58 — reverted the tree and wrote the question. Rulings 4 to 9 are in `PLAN[A].md`.
+- 03:00 — Re-run started. Tree clean at `6d8a8bc`, `package-lock.json` present, which the import step needs.
+- 03:01 — Re-captured the npm dependency set myself: 388 packages, `astro` 6.1.7.
+- 03:02 — Checked `DESIGN-GUIDE.md` before dispatching. It mentions npm zero times, so nothing to convert sat outside this phase's scope.
+- 03:03 — Executor dispatched.
+- 03:07 — Executor returned. One commit, `172b8bb`, exactly 7 files, nothing under `Tasks/`.
+- 03:08 — Ran the gates myself. All green: frozen install exit 0, build exit 0 at 8 pages, lockfile diff zero differences.
+- 03:09 — Deleted `node_modules` and `dist` and rebuilt from nothing. Exit 0, 8 pages again.
+- 03:10 — Verifier dispatched to judge that evidence.
+- 03:13 — **PASS.** It re-derived the 388-vs-388 proof independently from git history and got the same answer.
+- 03:15 — Results written. Phase closed.
 
-## One thing to know about the repo right now
+## Two things for your attention later, neither urgent
 
-Tracked files are untouched. But `node_modules/` is pnpm-shaped and `dist/` is gone, so **`npm run build` will not work until someone reinstalls.** Both folders are gitignored, so nothing is lost. The next run on this repo is pnpm-based anyway.
+1. **`README.md` line 104 documents `pnpm run format`, but `package.json` has no `format` script.** A template defect older than this phase. The word was converted; the missing script was not invented.
+2. **`zod` is still not a declared dependency.** The code routes around it through `astro/zod`, which works and adds nothing. Declaring it properly is the real cure whenever you want it.
+
+Both are in `Results/NOT_DONE[H].md`.
