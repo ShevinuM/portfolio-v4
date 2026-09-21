@@ -1,17 +1,13 @@
 ---
-import { SITE, THEME_CONFIG } from "../../config";
+import { THEME_CONFIG } from "../../config";
 import Icon from "../ui/Icon.astro";
 
-const currentYear = new Date().getFullYear();
 const showToggle = THEME_CONFIG.lightAndDark;
 ---
 
 <footer class="footer">
     <div class="flex items-center gap-4">
-        <span class="body-xs">&copy; {currentYear} {SITE.author}.</span>
-    </div>
-    <div class="flex items-center gap-4">
-        <span class="body-xs hidden sm:inline-block"
+        <span class="body-xs"
             >Built with <a
                 href="https://github.com/rubzip/academic-portfolio-astro/"
                 target="_blank"
@@ -19,6 +15,8 @@ const showToggle = THEME_CONFIG.lightAndDark;
                 class="link">Academic Portfolio Astro</a
             ></span
         >
+    </div>
+    <div class="flex items-center gap-4">
         <a
             href="/rss.xml"
             aria-label="RSS Feed"
