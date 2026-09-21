@@ -6,9 +6,9 @@ The repo uses pnpm instead of npm. `pnpm-lock.yaml` is committed, `package-lock.
 
 ## Scope
 
-`/Users/shev/Development/portfolio-v4/` — `package.json`, `package-lock.json`, `pnpm-lock.yaml`, `pnpm-workspace.yaml` (only if step 5 needs it), `.gitignore`, `README.md`, `AGENTS.md`.
+`/Users/shev/Development/portfolio-v4/` — `package.json`, `package-lock.json`, `pnpm-lock.yaml`, `pnpm-workspace.yaml`, `.gitignore`, `README.md`, `AGENTS.md`, **and line 3 of `src/content.config.ts` only** (scope extension granted by the main session — see ruling 10).
 
-Read-only: `Tasks/`, `src/`, `public/`, `astro.config.mjs`, `LICENSE`, `.github/` (phase 04 owns the workflow).
+Read-only: `Tasks/`, the rest of `src/`, `public/`, `astro.config.mjs`, `LICENSE`, `.github/` (phase 04 owns the workflow).
 
 ## Context
 
@@ -26,22 +26,53 @@ Read-only: `Tasks/`, `src/`, `public/`, `astro.config.mjs`, `LICENSE`, `.github/
 2. `package-lock.json` is deleted, not kept alongside. Two lockfiles is the ambiguity this phase exists to remove. Rejected: keeping it "in case" — it is recoverable from git history at `78eedda`.
 3. Phases 03 and 04 switch their build gate to `pnpm run build`. Their plans are updated by the main session when this phase closes. Constraint that would make this re-break: any later step that runs bare `npm install` regenerates `package-lock.json` and silently reintroduces the split.
 
+4. **A fresh `pnpm install` against a deleted lockfile re-resolves every range and breaks the stop condition.** Root cause: with no lockfile present, pnpm resolves each semver range in `package.json` to the newest satisfying version. `astro` is `^6.1.7` and 6.4.8 is in range (the handoff names it), so plan steps 2→4 as written would install 6.4.8 and silently drift several other packages too. That is exactly the drift this phase must stop on, so running the plan verbatim ends in BLOCKED for no reason.
+   Alternatives rejected: (a) run steps 2–4 as written and stop on the drift — wastes the run and produces no lockfile; (b) pin exact versions in `package.json` to force pnpm to match — changes the dependency declarations, which the plan's step 3 forbids.
+   Licensed fix: run `pnpm import` **while `package-lock.json` still exists** to generate `pnpm-lock.yaml` from npm's resolved tree, then delete `package-lock.json` and `node_modules`, then install with `pnpm install --frozen-lockfile` so the imported resolutions are proven satisfiable without re-resolution. This replaces the ordering of steps 2 and 4; steps 3 and 5–8 are unchanged. If `--frozen-lockfile` refuses the install, that is a finding to report, not a cue to drop the flag.
+   Constraint that would make this re-break: anyone who deletes `pnpm-lock.yaml` and reinstalls gets fresh resolution again. The committed lockfile is the only thing holding the versions.
+
+5. **Equivalence is proved by a lockfile-to-lockfile diff, run by the phase orchestrator, not the executor.** The npm side is the key set of `packages` in `package-lock.json` (388 entries, captured before any change); the pnpm side is the key set of the `packages:` section of `pnpm-lock.yaml`. Both enumerate the full resolved set including platform-optional entries, so they compare like for like. Same name at a different version is a STOP. A name present on only one side is a finding to report; the plan's context licenses `typescript` appearing or not, and nothing else.
+
+10. **ANSWER TO Q7, decided by the main session on 2026-09-22 at 03:00. Take option (a): `import { z } from 'astro/zod';`.**
+    Root cause: `src/content.config.ts` line 3 imports `zod`, which `package.json` never declared. npm's flat `node_modules` made it resolvable by accident; pnpm's strict layout does not. This is a pre-existing template bug that pnpm exposed — it is not version drift, and the 388-of-388 equivalence proof stands.
+    **Licensed:** phase 02b may edit **line 3 of `src/content.config.ts` and nothing else**, changing it to `import { z } from 'astro/zod';`. That path is a verified export of astro 6.1.7 (`"./zod": "./dist/zod.js"` in its `package.json`) re-exporting the same `zod@4.3.6` already in the lockfile.
+    **Alternatives rejected:** (b) declaring `"zod": "^4.3.6"` in `package.json` — it changes the dependency set, which forfeits this phase's central guarantee and its frozen-install proof, to describe a dependency the code should not be reaching for directly anyway. Hoisting workarounds (`publicHoistPattern`, `nodeLinker: hoisted`) — they recreate npm's flat layout so the bug survives and phases 03 and 04 inherit it silently. Switching to `astro:content`'s `z` — plausibly the more idiomatic form, but **unverified**, and `astro/zod` is proven; do not gamble on an unverified import at 3am.
+    **Constraint that would make this re-break:** any future code that imports `zod` by bare specifier fails the same way. The real cure is declaring the dependency, and that decision is recorded for the developer in `DEFERRED[H].md`.
+
+11. **`pnpm-workspace.yaml` with `allowBuilds` is mandatory, not conditional.** Root cause: `ERR_PNPM_IGNORED_BUILDS` is a hard exit-1 error in pnpm 11, not the advisory warning that plan step 5 and handoff ruling 7 both assumed. pnpm writes a placeholder stub demanding a decision, and `pnpm run <script>` re-invokes `pnpm install` through `runDepsStatusCheck` and inherits its exit code — so every script fails until the file is filled in. Both earlier assumptions are falsified.
+    **Licensed:** commit `pnpm-workspace.yaml` containing `allowBuilds: { esbuild: false, sharp: false }` — an explicit *denial*, matching what npm did in effect and what portfolio-v3 declares. Rejected: `true` for either — that runs install scripts npm never ran, changing behaviour in a phase meant to change only the tool.
+    **Constraint:** phase 04's CI runs `pnpm install` too. It fails the same way unless this file is committed. It is, so this is settled — but phase 04 must not delete it.
+
 ## Steps
 
-- [ ] 1. **Record the baseline before changing anything.** Run and save the output — the verifier compares against it:
+- [x] 1. **Record the baseline before changing anything.** Run and save the output — the verifier compares against it:
       ```
       cd /Users/shev/Development/portfolio-v4
       npm run build 2>&1 | tail -5
       find dist -name '*.html' | wc -l
       ```
       Note the page count. It must not change across the switch.
-- [ ] 2. Delete `/Users/shev/Development/portfolio-v4/package-lock.json` and `rm -rf /Users/shev/Development/portfolio-v4/node_modules`. A stale npm-shaped `node_modules` next to a pnpm lockfile produces confusing half-states.
-- [ ] 3. Add `"packageManager": "pnpm@11.20.0"` to `package.json`, directly after `"engines"`. Change nothing else in that file except the `name` field if phase 03 has not already set it — if unsure, leave `name` alone; phase 03 owns it.
-- [ ] 4. `cd /Users/shev/Development/portfolio-v4 && pnpm install` — must exit 0 and create `pnpm-lock.yaml`.
-- [ ] 5. `cd /Users/shev/Development/portfolio-v4 && pnpm run build` — must exit 0 and produce the same HTML page count as step 1.
-      **If and only if the build fails on a missing native binary** (sharp, esbuild), create `pnpm-workspace.yaml` with an `allowBuilds:` entry set to `true` for exactly the failing package, re-run `pnpm install` and `pnpm run build`, and record it as a ruling. Do not allow builds for packages that did not fail.
+- [ ] 2. **`pnpm import` FIRST, while `package-lock.json` still exists** (ruling 4). This generates `pnpm-lock.yaml` from npm's already-resolved tree instead of re-resolving every range. It regenerates deterministically in about 10 seconds; the previous run produced md5 `f25de839628c5ef1f30bfd6b430b8fe7` and a copy is at `/private/tmp/claude-501/-Users-shev-Development-portfolio-v4/b943f36f-95a2-4570-ac0b-d73145bfbfa8/scratchpad/pnpm-lock.yaml.verified`.
+      A bare `pnpm install` here would resolve `astro` `^6.1.7` to 6.4.8 and drift several other packages — the exact failure this phase must not produce.
+- [ ] 3. Now delete `/Users/shev/Development/portfolio-v4/package-lock.json` and `rm -rf /Users/shev/Development/portfolio-v4/node_modules`.
+- [ ] 4. Add `"packageManager": "pnpm@11.20.0"` to `package.json`, directly after `"engines"`. Change nothing else in that file. Do not touch `name` — phase 03 owns it.
+- [ ] 4b. Write `/Users/shev/Development/portfolio-v4/pnpm-workspace.yaml` (ruling 11):
+      ```yaml
+      allowBuilds:
+        esbuild: false
+        sharp: false
+      ```
+      This is required, not conditional. Without it `pnpm install` exits 1 with `ERR_PNPM_IGNORED_BUILDS`, and so does every `pnpm run` script.
+- [ ] 4c. Fix the undeclared `zod` import (ruling 10). In `src/content.config.ts`, change **line 3 only**:
+      `import { z } from 'zod';` → `import { z } from 'astro/zod';`
+      Touch nothing else in that file and nothing else under `src/`.
+- [ ] 5. `cd /Users/shev/Development/portfolio-v4 && pnpm install --frozen-lockfile` — must exit 0. The `--frozen-lockfile` flag is what proves the imported resolutions are satisfiable without re-resolution. **If it refuses the install, that is a finding to report, not a cue to drop the flag.**
+- [ ] 5b. `cd /Users/shev/Development/portfolio-v4 && pnpm run build` — must exit 0 and produce **8 HTML pages**, the same as the step-1 baseline.
 - [ ] 6. Confirm `.gitignore` still covers `node_modules/`. pnpm needs no extra ignore entries for this project — there is no local store directory inside the repo.
-- [ ] 7. Update the commands in `README.md` and `AGENTS.md`: every `npm install` → `pnpm install`, every `npm run <x>` → `pnpm run <x>`. Grep for stragglers: `grep -rn "npm " README.md AGENTS.md DESIGN-GUIDE.md`. Leave `.github/workflows/deploy.yml` alone — phase 04 owns it.
+- [ ] 7. Update the commands in `README.md` and `AGENTS.md`: every `npm install` → `pnpm install`, every `npm run <x>` → `pnpm run <x>`.
+      **Known straggler both of the plan's original greps missed: `README.md` line 97**, ``All standard build commands run through `npm`:`` — the word is inside backticks, not followed by a space. Convert it.
+      **Use this grep, not the original one:** `grep -rnE '(^|[^p])npm' README.md AGENTS.md DESIGN-GUIDE.md`. The naive `grep "npm run"` false-passes *and* false-fails, because `npm run` is a substring of `pnpm run`.
+      Leave `.github/workflows/deploy.yml` alone — phase 04 owns it.
 - [ ] 8. Commit as one unit. Message names both halves — the lockfile swap and the docs — and ends with
       `Co-Authored-By: Claude Opus 5 (1M context) <noreply@anthropic.com>`
 
@@ -56,17 +87,38 @@ Run from `/Users/shev/Development/portfolio-v4`:
 | pnpm lockfile committed | `git ls-files pnpm-lock.yaml` | one line |
 | npm lockfile gone | `test ! -e package-lock.json && git ls-files package-lock.json` | file absent, no output |
 | packageManager pinned | `grep -c '"packageManager": "pnpm@' package.json` | 1 |
-| docs say pnpm | `grep -rn "npm install\|npm run" README.md AGENTS.md DESIGN-GUIDE.md` | no output |
+| docs say pnpm | `grep -rnE '(^\|[^p])npm' README.md AGENTS.md DESIGN-GUIDE.md` | no output. **Do not use `grep "npm run"`** — `npm run` is a substring of `pnpm run`, so it both false-passes and false-fails |
+| zod import fixed | `grep -n "from 'zod'" src/content.config.ts; grep -c "astro/zod" src/content.config.ts` | no bare-`zod` hit; 1 |
+| only that line changed in src | `git diff HEAD --stat -- src/` | exactly `src/content.config.ts \| 2 +-` |
+| allowBuilds committed | `git ls-files pnpm-workspace.yaml && grep -c "false" pnpm-workspace.yaml` | one line; 2 |
+| no drift | compare the `packages:` key set of `pnpm-lock.yaml` against the 388 `packages` keys of `package-lock.json` at `b34a577` | identical sets, zero lines of diff; `astro` at 6.1.7 |
 | no npm state left | `ls -a \| grep -c "^\.npmrc$"` | 0, unless one was created deliberately and ruled |
 | clean tree | `git -C /Users/shev/Development/portfolio-v4 status --short -- . ':(exclude)Tasks'` | empty — **use this exact form** |
 
 ## Acceptance criteria
 
 - [ ] All verification checks pass.
-- [ ] `pnpm install` from a deleted `node_modules` reproduces a green build. Prove it: delete `node_modules` and `dist`, re-run both, confirm exit 0 and the same page count.
+- [ ] `pnpm install --frozen-lockfile` from a deleted `node_modules` reproduces a green build. Prove it: delete `node_modules` and `dist`, re-run both, confirm exit 0 and 8 pages.
+- [ ] Exactly one line under `src/` changed, and it is line 3 of `content.config.ts`.
 - [ ] Exactly one lockfile exists in the repo.
 - [ ] One commit, tree clean outside `Tasks/`.
 
 ## Stop conditions
 
 Do not change any dependency version, add a dependency, or run `pnpm update` / `npm audit fix`. This is a tool swap, not a dependency upgrade — the dependency set must be identical before and after. Do not touch `src/`, `public/`, or `.github/workflows/deploy.yml`. If pnpm resolves a dependency to a version npm did not, stop and report it rather than accepting the drift silently.
+
+## Rulings added during execution (continued)
+
+6. **`pnpm install` under pnpm 11.20.0 exits 1 on ignored build scripts, and that failure propagates into `pnpm run build`.** Root cause: pnpm 11 raises `ERR_PNPM_IGNORED_BUILDS` (esbuild@0.27.7, sharp@0.34.5) as a hard error, not a warning, and scaffolds a placeholder `pnpm-workspace.yaml` demanding an explicit decision. `pnpm run build` re-invokes `pnpm install` via `runDepsStatusCheck` and inherits exit 1, so the build never starts. This contradicts plan step 5, which anticipated only a *missing native binary* failure, and contradicts the handoff's ruling 7, which assumed the message was advisory. Both are now falsified.
+   Alternatives rejected: (a) `pnpm approve-builds` / `allowBuilds: true` — runs install scripts npm never ran, which changes what lands on disk and is not a tool swap; (b) leaving the placeholder in place — pnpm keeps failing; (c) `strict-dep-builds=false` — needs an `.npmrc`, which the plan's verification forbids.
+   Licensed fix (in scope: `pnpm-workspace.yaml` is scoped to this phase and a build failure forced it): write `allowBuilds: { esbuild: false, sharp: false }` — an explicit **denial**, which is exactly what npm did in effect (it skipped sharp's script and built green) and what portfolio-v3 did. **Verified:** with this file, `pnpm install --frozen-lockfile` exits 0, the lockfile is unchanged, and the install is byte-identical.
+   Constraint that would make this re-break: adding any dependency with an install script adds a third key pnpm will refuse until it is decided; `allowBuilds` must then be extended, not switched to `true`.
+
+7. **Dependency equivalence is PROVEN. No drift.** `pnpm import` carried npm's exact resolutions across. The orchestrator ran the authoritative diff: npm `packages` keys (388) vs `pnpm-lock.yaml` `packages:` keys (388), **zero diff lines**. `astro` installed at 6.1.7, not 6.4.8. `node_modules/typescript` is still absent. `.npmrc` was not created. The lockfile is correct and must be kept; regenerating it with a bare `pnpm install` would re-resolve and drift.
+
+8. **BLOCKER — `zod` is a phantom dependency and the fix is outside this phase's scope.** `/Users/shev/Development/portfolio-v4/src/content.config.ts:3` is `import { z } from 'zod'`, but `zod` is not in `package.json`. npm's flat `node_modules` hoisted `zod@4.3.6` (a transitive dep of astro) to the top level and masked this. pnpm's symlinked layout exposes only declared dependencies, so the import fails and `pnpm run build` dies in `astro sync` with `Cannot find module 'zod'`. This is pre-existing latent breakage that pnpm surfaced — **not** drift caused by this phase. `zod` is the only phantom: every other bare specifier in `src/` and `astro.config.mjs` maps to a declared dependency.
+   The phase cannot close: `src/` is read-only to this phase, and every in-scope workaround is a semantic decision the developer has not licensed. Written to `Tasks/OPEN_QUESTIONS[H].md`; phase returns BLOCKED.
+
+9. **The plan's own doc-verification greps false-fail on a CORRECT conversion.** Root cause: `npm run` is a substring of `pnpm run`. After step 7 converts the docs, the verification row `grep -rn "npm install\|npm run" README.md AGENTS.md DESIGN-GUIDE.md` matches every converted line, and step 7's straggler grep `grep -rn "npm "` does the same. A correct tree would be failed by its own check.
+   Replacement to use instead: `grep -rnE '(^|[^p])npm' README.md AGENTS.md DESIGN-GUIDE.md` — expected output: none.
+   Also note **README line 97**, ``All standard build commands run through `npm`:`` — a real straggler that BOTH the original greps miss, because `npm` is followed by a backtick rather than a space. It is in scope and must be converted. The doc half of this phase was never started; no doc edits were made.
