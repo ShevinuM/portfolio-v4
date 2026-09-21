@@ -49,7 +49,7 @@ Run from `/Users/shev/Development/portfolio-v4`:
 | workflow present | `test -f .github/workflows/deploy.yml` | pass |
 | no Cloudflare config | `ls wrangler.* 2>/dev/null; grep -c "cloudflare\|wrangler" package.json astro.config.mjs` | no files, count 0 |
 | site URL correct | `grep -c "https://shevinum.dev" dist/sitemap-0.xml` | ≥ 1 |
-| no base path | `grep -c "/academic-portfolio-astro/" dist/index.html` | 0 |
+| no base path | `grep -c 'href="/academic-portfolio-astro\|src="/academic-portfolio-astro' dist/index.html` | 0. **Do not use a bare `grep -c "/academic-portfolio-astro/"`** — it also matches the MIT attribution link `https://github.com/rubzip/academic-portfolio-astro/` in the footer, which is required and must stay. Phase 03 flagged this as a false-failure trap. |
 | no adapter | `grep -c "adapter" astro.config.mjs` | 0 |
 | clean tree | `git -C /Users/shev/Development/portfolio-v4 status --short -- . ':(exclude)Tasks'` | empty — **use this exact form**. A bare `git status --short` always shows `Tasks/` churn that the protocol itself requires, and would FAIL spuriously. |
 

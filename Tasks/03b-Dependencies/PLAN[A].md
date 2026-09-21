@@ -49,6 +49,11 @@ Read-only: `Tasks/`, `src/`, `public/`, `astro.config.mjs`, `tsconfig.json`, `LI
       ```
 - [ ] 2. Update every dependency inside its existing range: `pnpm update`. Do **not** pass `--latest`. Do not hand-edit any version range in `package.json`.
 - [ ] 3. Confirm the result matches the "wanted" column in the Context table — `pnpm outdated` afterwards should list **only** `astro` (6.4.8 → 7.3.3) and `katex` (0.16.47 → 0.18.7). If any other package is still behind, stop and report it.
+- [ ] 3b. **Confirm `astro/zod` survived the update.** `src/content.config.ts` depends on it and `zod` is not a declared dependency, so this import path is the only thing making the build work:
+      ```
+      node -p "require('./node_modules/astro/package.json').exports['./zod']"
+      ```
+      It must still resolve. Do not trust a green build alone — a stale content cache can mask it. If the export is gone, that is a finding to report, not something to route around.
 - [ ] 4. Confirm the critical advisory is gone: `pnpm audit` — the `astro` critical entry must be absent. Record the new total. Do **not** run `pnpm audit --fix`; anything left needs a major bump and belongs to the deferred decision.
 - [ ] 5. Add `typescript` as a dev dependency: `pnpm add -D typescript`. Add `"check": "astro check"` to `package.json` scripts, after `"build"`.
 - [ ] 6. Run `pnpm run check` once. Record the exact output — error count and the first few messages — in `PLAN[A].md` as a ruling. **Do not edit any file under `src/` to fix what it reports** (ruling 3).
@@ -68,7 +73,9 @@ Run from `/Users/shev/Development/portfolio-v4`:
 | check | command | expected |
 |---|---|---|
 | build | `pnpm run build` | exit 0 |
-| page count unchanged | `find dist -name '*.html' \| wc -l` | equals the step-1 baseline |
+| page count unchanged | `find dist -name '*.html' \| wc -l` | **26**, equal to the step-1 baseline |
+| only talks warns | the build log's collection warnings | `talks` only. A warning naming `posts`, `publications` or `projects` is REAL BREAKAGE even at exit 0 |
+| astro/zod still resolves | `node -p "require('./node_modules/astro/package.json').exports['./zod']"` | `./dist/zod.js` |
 | astro updated | `node -p "require('./node_modules/astro/package.json').version"` | `6.4.8` or newer 6.x |
 | critical gone | `pnpm audit 2>&1 \| grep -ci critical` | 0 |
 | only majors remain | `pnpm outdated` | lists only `astro` and `katex`, nothing else |

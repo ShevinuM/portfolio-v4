@@ -16,6 +16,20 @@
 
 7. **The README documents a `format` script that does not exist.** `README.md:104` tells a reader to run `pnpm run format`, but `package.json` declares no such script. A pre-existing template defect — phase 02b converted the command verbatim rather than inventing a script, which was correct. Either add a formatter (the template has no prettier config either) or drop the line. Phase 03 rewrites the README and will not carry the false claim forward.
 
+8. **Your avatar renders 1 pixel wide.** `src/components/layout/LeftSidebar.astro:19` has a stray comment inside the `<img>` tag, so it emits `width="1"`. Pre-existing template bug, one-line fix, and it is visible on every page. **Worth doing before you deploy.** No phase in this run owns `src/components/`, which is why it is here rather than assigned.
+
+9. **`/favicon.ico` 404s.** The template's `favicon.ico` was deleted and `SITE.favicon` points at the `.svg`, but browsers still probe `/favicon.ico` by default. Harmless, noisy in logs.
+
+10. **Two unused social icons ship in the bundle** — `Facebook.svg` and `Twitter.svg` in `src/assets/icons/`. Nothing references them.
+
+11. **The talks detail route is never exercised.** `src/pages/talks/[id].astro` exists but `talks/` is empty by your choice, so the route has never rendered. If you ever add a talk, that page runs for the first time.
+
+12. **The licence is still Rubén Gijón's.** `LICENSE` is the template author's MIT, correctly kept — MIT requires the notice. But you have not chosen terms for your own content and writing. Worth deciding before the repo is public.
+
+13. **A timezone bug in date rendering.** `date: "2025"` renders as "January 2025" here and on GitHub Actions, but as "December 2024" for a reader west of UTC. Affects the NER publication's date. Pre-existing in the template's date handling.
+
+14. **A purpose-built OG card.** Your social-share image is currently your portrait (`picofme.jpeg`), which works but is not a designed 1200×630 card. See `Tasks/03-Content/Results/DEVIATIONS[H].md` for why v3's `og_image.png` was not reused.
+
 ## Dropped, no decision needed
 
 6. **Photo gallery.** portfolio-v3 has a "My Recent Travels" section with 9 photos in `portfolio-v3/public/photos/`. The new template has no gallery route or component. Dropped on 2026-09-22 by your decision. The photos still exist in v3 if you want a gallery later — it would mean a new collection, a new route and a new component.

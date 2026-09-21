@@ -1,26 +1,53 @@
 # Handoff into Phase 03b
 
-Stub. Rewritten for real when Phase 03 closes.
+Phases 01, 02, 02b and 03 all closed with a verifier PASS. The site is now the developer's own: bio, Resume, the NER publication, the blog article, the Digest project, real socials and metadata.
 
-Added mid-run at the developer's request, after an audit of the template's dependencies.
+## Tree state you inherit
 
-## Inherited from earlier phases
+- `/Users/shev/Development/portfolio-v4`, branch `main` at `3ba2f5d`, **no remote**. Clean outside `Tasks/`.
+- **`pnpm run build` → exit 0, 26 pages.** That is your step-1 baseline figure. It must not change.
+- The only collection warning is **`talks` (×19)**, which is empty by design and will warn forever. **Any *other* collection warning after your update is real breakage**, even though the build still exits 0.
+- `node_modules/` is a pnpm frozen install. `dist/` is a current 26-page build.
 
-- `/Users/shev/Development/portfolio-v4` is a git repo on `main`, no remote. Everything outside `Tasks/` is committed and clean.
-- **Check the tree with `git -C /Users/shev/Development/portfolio-v4 status --short -- . ':(exclude)Tasks'`.** A bare `git status --short` always shows `Tasks/` churn the protocol itself requires, and reads as a false failure.
-- **The repo is on pnpm** (phase 02b). `package-lock.json` is deleted and `"packageManager": "pnpm@11.20.0"` is pinned. Never run bare `npm install` — it recreates the npm lockfile.
-- `typescript` is absent. Phase 01 recorded npm dropping it as an unused optional peer. **This phase installs it deliberately** — that is step 5, not an accident to undo.
-- sharp's install script was skipped under npm and the build was green anyway. Watch whether the dependency update or pnpm changes that.
+## Rulings that still bind
 
-## What phase 03 is expected to settle first
+1. **Tree check: `git -C /Users/shev/Development/portfolio-v4 status --short -- . ':(exclude)Tasks'`.**
+2. **pnpm only.** A bare `npm install` regenerates `package-lock.json` and undoes phase 02b. Never delete `pnpm-lock.yaml` (the only thing pinning versions) or `pnpm-workspace.yaml` (without its `allowBuilds` denial, pnpm 11 exits 1 with `ERR_PNPM_IGNORED_BUILDS`, and because `pnpm run <script>` re-invokes install through `runDepsStatusCheck`, *every* script fails).
+3. **Clear the content cache before every gate:** `rm -f node_modules/.astro/data-store.json && rm -rf .astro dist`. Phase 03 did this before every build and it removed stale-build ambiguity from every verdict.
+4. **Judge grep output, not exit status.**
 
-- The final content set and page count. This phase's step 1 captures that count itself, but the count must not change across the dependency update.
-- `astro.config.mjs` final state — `site: 'https://shevinum.dev'`, no `base`. This phase does not touch it.
-- That `pnpm run build` is green on the finished site.
+## The one thing your update could silently break
 
-## Decisions already made, do not relitigate
+**`src/content.config.ts` line 3 is `import { z } from 'astro/zod';`.** `zod` is still not a declared dependency; that import path is the only thing making the build work. **After updating Astro to 6.4.8, verify `"./zod"` is still in astro's `package.json` export map** — read it directly:
 
-- **In-range updates only.** Astro 7 and KaTeX 0.18 are deferred to the developer as separate decisions. See ruling 1.
-- **KaTeX stays.** Removing it was offered and not chosen, even though no remaining content uses math and it imports 4.4 MB plus a global stylesheet on every page.
-- **`@fontsource-variable/inter` stays**, despite being imported zero times. Removal was offered and not chosen.
-- **`astro check` is added but not enforced.** See ruling 3. Do not edit `src/` to satisfy it.
+```
+node -p "require('./node_modules/astro/package.json').exports['./zod']"
+```
+
+Do not trust a green build alone here. If the export is gone, that is a finding to report, and the fallback is declaring `"zod": "^4.3.6"` — which the developer has already been offered in `DEFERRED[H].md`.
+
+## Four grep patterns that are defective — do not copy them into your verification
+
+Phase 03 found these produce false failures on a correct site:
+
+1. `>Label<` never matches an Astro nav label — the emitted HTML has whitespace around it.
+2. `Icon Not Found` can never render. `Icon.astro:14` throws at build time, so a missing icon fails the build rather than printing that text. The check is vacuous.
+3. A bare `/academic-portfolio-astro/` also matches the **required** MIT attribution link in the footer. Match `href="/academic-portfolio-astro` instead.
+4. `icon-tabler-school` appears once, not twice.
+
+## What `pnpm run check` will flag — expected, not yours to fix
+
+When you add `astro check` (step 5), expect it to report **`LeftSidebar.astro:19`** and possibly the nested `<svg>` in every icon component. **Both are pre-existing template defects.** Ruling 3 of your plan forbids editing `src/` to satisfy the checker — record the output and move on. The `LeftSidebar.astro:19` bug (a stray comment making the avatar render `width="1"`) is already in `DEFERRED[H].md` for the developer.
+
+## Environment gotchas
+
+- `ls` returns empty output in this sandbox. Use `find . -maxdepth 1 -name …`.
+- `${PIPESTATUS[0]}` is empty under zsh, so `cmd | tail` loses the exit status. Capture to a file and read `$?`; append `echo "EXIT=$?"` to gate logs.
+- npm's `packages` object has a root `""` self-entry, so raw key counts read one higher than the real package count. Not relevant unless you re-derive a lockfile diff.
+
+## Not yours
+
+- `public/CNAME` **does not exist** and phase 04 creates it. `astro.config.mjs` has `site: 'https://shevinum.dev'` and **no `base`** — do not reintroduce one.
+- `.github/workflows/deploy.yml` is otherwise phase 04's. **You change only its `node-version:` line** (22 → 24).
+- `LICENSE` is the template author's MIT and stays.
+- Everything in `DEFERRED[H].md` is the developer's decision, not yours — in particular Astro 7 and KaTeX 0.18, which your ruling 1 explicitly refuses.
