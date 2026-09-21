@@ -14,7 +14,9 @@ Read-only: everything else, including `src/`.
 
 - The developer chose GitHub Pages with the custom domain `shevinum.dev` (CNAME), at the stop gate.
 - The template is fully static. No adapter, no SSR, no `@astrojs/cloudflare`, no `wrangler`. Do not port v3's Cloudflare worker config — v3 used an SSR adapter this template does not need.
-- The template already ships `.github/workflows/deploy.yml` using `withastro/action@v3` with `node-version: 22`. Node on this machine is v26; the workflow pin is for CI and is fine as-is.
+- The template ships `.github/workflows/deploy.yml` using `withastro/action@v3`. Its action versions (`checkout@v4`, `deploy-pages@v4`, `withastro/action@v3`) are current — nothing to bump. **Phase 03b changed `node-version: 22` to `24`** at the developer's request; `engines.node` is `">=24"` and `.nvmrc` says `24`. Local Node is v26.9.0, which satisfies the floor.
+- **The repo uses pnpm** (phase 02b switched it) and `package.json` pins `"packageManager": "pnpm@11.20.0"`. `withastro/action` detects the package manager from the lockfile, so `pnpm-lock.yaml` should be enough — but **read the workflow and confirm** it will install with pnpm rather than assuming npm. If it needs an explicit `package-manager: pnpm` input or a `pnpm/action-setup` step, add it and record a ruling. A workflow that runs `npm ci` against a repo with no `package-lock.json` fails on the first push, and the developer will not see that failure until they push.
+- Use `pnpm run build` for every local gate, never `npm`.
 - A custom domain at the apex means **no base path**. Phase 03 already sets `site: 'https://shevinum.dev'` and deletes `base` from `astro.config.mjs`. This phase verifies that, it does not redo it.
 - `public/CNAME` must contain exactly `shevinum.dev` and a trailing newline, nothing else. Astro copies `public/` verbatim into `dist/`, so the file lands at the root of the published site, which is what GitHub Pages reads.
 - DNS and the GitHub repo itself are the developer's to set up. This phase writes config only.
@@ -26,11 +28,12 @@ Read-only: everything else, including `src/`.
 
 ## Steps
 
-- [ ] 1. Confirm `.github/workflows/deploy.yml` still exists and is unmodified from the template. Read it; do not rewrite it unless a step below requires it.
+- [ ] 1. Read `.github/workflows/deploy.yml`. **Phase 03b already changed its `node-version:` line from 22 to 24** — that change is expected and correct, leave it. Nothing else in the file should differ from the template. Do not rewrite the file unless step 1b requires it.
+- [ ] 1b. Confirm the workflow will install with **pnpm**, not npm. `withastro/action@v3` detects the package manager from the lockfile, and `package.json` pins `"packageManager": "pnpm@11.20.0"` — but verify rather than assume. If the action needs an explicit input or a `pnpm/action-setup` step, add it and record a ruling. A workflow that runs `npm ci` against a repo with no `package-lock.json` fails on the developer's first push, and they will not see it until then.
 - [ ] 2. Create `/Users/shev/Development/portfolio-v4/public/CNAME` containing the single line `shevinum.dev`.
 - [ ] 3. Verify `astro.config.mjs` has `site: 'https://shevinum.dev'` and **no** `base` key. If phase 03 left either wrong, fix it here and note it in `DEVIATIONS[H].md`.
 - [ ] 4. Confirm no Cloudflare artefacts exist anywhere: no `wrangler.jsonc`, no `wrangler.toml`, no `@astrojs/cloudflare` or `wrangler` in `package.json`, no `adapter:` in `astro.config.mjs`.
-- [ ] 5. `npm run build` — must exit 0.
+- [ ] 5. `pnpm run build` — must exit 0.
 - [ ] 6. Add a short **Deploying** section to `README.md`: push to `main` and the workflow publishes to GitHub Pages; the repo's Pages setting must use "GitHub Actions" as the source; the `shevinum.dev` DNS must point at GitHub Pages (apex A/ALIAS records) before the custom domain resolves.
 - [ ] 7. Commit as one unit, message ending with the trailer
       `Co-Authored-By: Claude Opus 5 (1M context) <noreply@anthropic.com>`
@@ -41,7 +44,7 @@ Run from `/Users/shev/Development/portfolio-v4`:
 
 | check | command | expected |
 |---|---|---|
-| build | `npm run build` | exit 0 |
+| build | `pnpm run build` | exit 0 |
 | CNAME published | `cat dist/CNAME` | exactly `shevinum.dev` |
 | workflow present | `test -f .github/workflows/deploy.yml` | pass |
 | no Cloudflare config | `ls wrangler.* 2>/dev/null; grep -c "cloudflare\|wrangler" package.json astro.config.mjs` | no files, count 0 |
