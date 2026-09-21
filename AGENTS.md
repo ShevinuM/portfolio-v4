@@ -7,12 +7,15 @@
 
 ## Requirements
 - Node.js >= 22.12.0
+- pnpm is the package manager (`packageManager: pnpm@11.20.0`). Install with `pnpm install --frozen-lockfile`
+- `pnpm-lock.yaml` is the only lockfile — never run `npm install`, it would regenerate `package-lock.json`
 
 ## Architecture
 - **Barrel files:** `src/config/index.ts`, `src/types/index.ts`
 - **Content:** `src/content/` - Add `.md` files to subdirectories (posts/, publications/, projects/, talks/)
+- **Resume page:** the route is `src/pages/resume/`, but the content file stays `src/content/cv.md` and the collection key stays `cv`. The rename was reader-facing only — moving the file would need the loader glob in `src/content.config.ts` moved with it
 - **Config:** `src/config/` - site.ts (SITE, THEME_CONFIG, SETTINGS, ANALYTICS), pages.ts (PAGES), navigation.ts (NAV_LINKS), social.ts (SOCIALS), themes.ts
-- **Types:** `src/types/` - content.ts (Bio, CVItem, etc.), display.ts (ListingItem, DetailItem), config.ts, themes.ts
+- **Types:** `src/types/` - content.ts (Bio, CVItem, CV, EducationItem, ExperienceItem, Blog, Project, Publication, Talk), display.ts (ListingItem, DetailItem), config.ts, themes.ts
 - **Styles:** `src/styles/global.css` - Theme colors, base styles
 - **Assets:** `src/assets/icons.ts` - Icon definitions
 

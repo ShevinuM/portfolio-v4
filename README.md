@@ -1,110 +1,71 @@
-# 🎓 Academic Portfolio Astro
+# shevinum.dev
 
-[![Astro](https://img.shields.io/badge/ASTRO-FF5D01?style=for-the-badge&logo=astro&logoColor=white)](https://astro.build/)
-[![Tailwind](https://img.shields.io/badge/TAILWIND-06B6D4?style=for-the-badge&logo=tailwind-css&logoColor=white)](https://tailwindcss.com/)
-[![TypeScript](https://img.shields.io/badge/TypeScript-3178C6?style=for-the-badge&logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
-[![License](https://img.shields.io/badge/MIT-44CC11?style=for-the-badge)](https://opensource.org/license/mit)
+Shevinu Nawalage's personal site — about, publications, code, blog, and a resume.
+Built with [Astro](https://astro.build/) and Tailwind CSS v4, deployed to GitHub Pages
+and live at <https://shevinum.dev>.
 
-A fast, minimalist, and highly customizable Astro template designed specifically for researchers, professors, PhD students, and academics. 
+## Running it locally
 
-Strongly inspired by [Academic Pages](https://github.com/academicpages/academicpages.github.io) and [AstroPaper](https://github.com/satnaing/astro-paper), this template prioritizes content readability, SEO discoverability, and ease of configuration without touching the UI code.
+Node.js >= 22.12.0 is required. The package manager is pnpm (`packageManager: pnpm@11.20.0`)
+and `pnpm-lock.yaml` is the only lockfile in the repo — do not install with npm or yarn.
 
-> 🌟 **[View the Live Demo](https://astro-academics-page.vercel.app/)**
-
-## ✨ Features
-
-- **Markdown-Driven Collections:** Easily manage your `Bio`, `Blog`, `Publications`, `Projects`, `Talks`, and `CV` experience purely through `.md` files, **no programming knowledge required**.
-- **Academic Standard Support:** Out-of-the-box $\LaTeX$ rendering support via `remark-math`/`rehype-katex`.
-- **Extensive Theming System:** Built-in Light/Dark mode toggle with a highly customizable underlying design system and several preset color palettes.
-- **Toggleable Sections:** Don't need a "Talks" section? Disable it globally with a single boolean flag in your config.
-- **Peak Performance:** Built with Astro and Tailwind CSS v4 (via `@tailwindcss/vite`), yielding near-perfect Lighthouse scores and minimal client-side JavaScript.
-- **Analytics:** Includes native configuration options for self-hosted Umami analytics (`umami.websiteId`), as well as GA4 support (`ga4Id`).
-- **Two-Column Architecture:** Optimized layout with a sticky left profile sidebar and a scrollable main content area.
-
-## 🚀 Getting Started
-
-### 1. Bootstrap the Repository
-
-**Via GitHub CLI (Recommended):**
 ```bash
-gh repo create my-portfolio --template="rubzip/academic-portfolio-astro" --clone
-cd my-portfolio
-```
-
-**Via Standard Git:**
-```bash
-git clone https://github.com/rubzip/academic-portfolio-astro.git my-portfolio
-cd my-portfolio
-```
-
-### 2. Install Dependencies
-This project uses Node.js (requires **Node.js >= 22.12.0**).
-```bash
-pnpm install
-```
-
-### 3. Start Development Server
-```bash
+pnpm install --frozen-lockfile
 pnpm run dev
 ```
-Your local server will start at `http://localhost:4321`.
 
-## 📂 Architecture & Structure
-
-This project follows a centralized configuration architecture and is driven entirely by Markdown/MDX content.
-
-```text
-/
-├── public/                 # Static assets (images, favicon, robots.txt)
-├── src/
-│   ├── assets/             # Global icons (`icons.ts`)
-│   ├── components/         # Reusable Astro UI components (Tailwind classes used for styling)
-│   ├── config/             # ⚙️ ALL GLOBAL CONFIGURATION LIVES HERE
-│   │   ├── site.ts         # Meta details & Analytics (SITE, THEME_CONFIG, SETTINGS)
-│   │   ├── pages.ts        # Enable/Disable sections & subtitles (PAGES)
-│   │   ├── themes.ts       # Color palettes
-│   │   ├── navigation.ts   # Navbar links (NAV_LINKS)
-│   │   └── social.ts       # Social media links (SOCIALS)
-│   ├── content/            # 📝 ALL MARKDOWN CONTENT LIVES HERE
-│   │   ├── bio.md
-│   │   ├── cv.md
-│   │   ├── posts/
-│   │   ├── projects/
-│   │   ├── publications/
-│   │   └── talks/
-│   ├── layouts/            # Page layout wrappers
-│   ├── pages/              # Astro routing
-│   ├── styles/             # Global CSS (`global.css` - Theme colors, base styles)
-│   └── types/              # TypeScript interfaces (content, display, config, themes)
-└── content.config.ts       # Zod schemas for all markdown collections
-```
-
-## 📋 Configuration
-
-All configuration is managed centrally in the `src/config` directory. Modify these files to personalize your portfolio without touching any UI code:
-
-| File | Purpose |
-| :--- | :--- |
-| [`pages.ts`](src/config/pages.ts) | Enable/disable entire sections (e.g., `talks`) and set page subtitles. |
-| [`themes.ts`](src/config/themes.ts) | Define and manage all color palettes. Use `THEME_CONFIG` in `site.ts` to apply. |
-| [`site.ts`](src/config/site.ts) | Manage metadata, analytics keys (Umami/GA4), and critical file paths. |
-| [`navigation.ts`](src/config/navigation.ts) | Define the primary navigation bar links. |
-| [`social.ts`](src/config/social.ts) | Configure social media links appearing in the footer and header. |
-
-
-## 🛠️ Build Commands
-
-All standard build commands run through `pnpm`:
+The dev server starts at `http://localhost:4321`.
 
 | Command | Action |
 | :--- | :--- |
-| `pnpm run dev` | Starts the local development server on `localhost:4321` |
-| `pnpm run build` | Builds your project for production output into `./dist/` |
-| `pnpm run preview` | Previews your production build locally |
-| `pnpm run format` | Runs Prettier on all files to format code |
+| `pnpm run dev` | Start the local dev server |
+| `pnpm run build` | Build the production site into `./dist/` |
+| `pnpm run preview` | Serve the production build locally |
+| `pnpm run astro` | Run the Astro CLI directly |
 
-## 🤝 Contributing & License
+Those four are the only scripts in `package.json`.
 
-Contributions, issues, and feature requests are always welcome! Feel free to check the [issues page](https://github.com/rubzip/academic-portfolio-astro/issues).
+## Where the content lives
 
-This project is licensed under the **MIT License** - see the `LICENSE` file for details.
+Every page's content is markdown under `src/content/`:
+
+```text
+src/content/
+├── bio.md            # the About page — name, avatar, short bio, and the About body
+├── cv.md             # the Resume page — experience and education, all in frontmatter
+├── posts/            # blog posts
+├── publications/     # papers
+├── projects/         # code projects
+└── talks/            # talks (no entries yet)
+```
+
+The frontmatter each collection accepts is defined in `src/content.config.ts`.
+Adding a `.md` file to one of those directories is enough to make it appear in
+that section's listing and get its own detail page.
+
+**Resume vs. `cv`.** The reader-facing page is `/resume`, and its route lives in
+`src/pages/resume/`. The internal names were deliberately left as `cv`: the content
+file is `src/content/cv.md`, and both the collection key and the `PAGES` key are `cv`.
+Renaming them would mean moving the file and the content loader's glob together,
+for no reader-visible gain.
+
+## Where the configuration lives
+
+Everything configurable sits in `src/config/`, re-exported from `src/config/index.ts`:
+
+| File | Purpose |
+| :--- | :--- |
+| `site.ts` | Site metadata (`SITE`), theme selection (`THEME_CONFIG`), toggles (`SETTINGS`), analytics IDs (`ANALYTICS`) |
+| `pages.ts` | Each section's title, subtitle, and whether it is active (`PAGES`) |
+| `navigation.ts` | The navigation bar links (`NAV_LINKS`) |
+| `social.ts` | Profile and social links with their icon names (`SOCIALS`, `SOCIAL_ICONS`) |
+| `themes.ts` | The colour palettes `THEME_CONFIG` chooses from (`THEMES`) |
+
+Icons are SVG files in `src/assets/icons/`, auto-globbed by `src/assets/icons.ts` —
+dropping a new file into that directory is the whole wiring, and its filename is
+the name `SOCIAL_ICONS` refers to.
+
+## Credits
+
+Built from the [academic-portfolio-astro](https://github.com/rubzip/academic-portfolio-astro)
+template by rubzip, MIT licensed — see `LICENSE`.
