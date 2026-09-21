@@ -187,8 +187,7 @@ src/
 ├── layouts/
 │   ├── BaseLayout.astro
 │   ├── BaseDetail.astro       (uses .prose, .page-title, .card-meta)
-│   ├── BaseListing.astro      (uses .item-list, .page-header)
-│   └── DevToolsLayout.astro
+│   └── BaseListing.astro      (uses .item-list, .page-header)
 └── styles/
     └── global.css             (all unified classes)
 ```
