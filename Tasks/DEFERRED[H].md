@@ -19,7 +19,8 @@
 
 7. **The README documents a `format` script that does not exist.** `README.md:104` tells a reader to run `pnpm run format`, but `package.json` declares no such script. A pre-existing template defect — phase 02b converted the command verbatim rather than inventing a script, which was correct. Either add a formatter (the template has no prettier config either) or drop the line. Phase 03 rewrites the README and will not carry the false claim forward.
 
-8. **Your avatar renders 1 pixel wide.** `src/components/layout/LeftSidebar.astro` **line 18** — a `/* ... */` comment sits inside the `width={160}` attribute of an `<Image>` component, so it emits `width="1"`. Pre-existing template bug, one-line fix, visible on every page. **Worth doing before you deploy.** No phase in this run owns `src/components/`, which is why it is here rather than assigned. Note `astro check` does NOT catch it — a malformed template attribute is not a type error.
+8. ~~**The avatar `<Image>` emitted malformed markup.**~~ **FIXED** in `2f5ad0a`, outside the phase structure, after a visual check. `src/components/layout/LeftSidebar.astro` line 18 had a `/* ... */` comment inside the `<Image>` attribute list, which Astro parsed as six junk HTML attributes (`*="true" Maximum="true" in="true" global.css="true" for="true" sidebar-avatar="true"`) plus `width="1"`.
+   **The earlier "renders 1 pixel wide" description was wrong** — `.sidebar-avatar { width: 160px }` in `global.css` overrode the attribute, so the portrait always displayed correctly. The real damage was invalid DOM attributes and a `srcset` that never resized the image. Confirmed fixed: the markup is now clean and the page renders correctly in both themes.
 
 9. **`/favicon.ico` 404s.** The template's `favicon.ico` was deleted and `SITE.favicon` points at the `.svg`, but browsers still probe `/favicon.ico` by default. Harmless, noisy in logs.
 
