@@ -3,10 +3,11 @@
 ## Commands
 - `pnpm run dev` - Start dev server
 - `pnpm run build` - Production build
+- `pnpm run check` - Run the Astro/TypeScript type checker
 - `pnpm run preview` - Preview build
 
 ## Requirements
-- Node.js >= 22.12.0
+- Node.js >= 24
 - pnpm is the package manager (`packageManager: pnpm@11.20.0`). Install with `pnpm install --frozen-lockfile`
 - `pnpm-lock.yaml` is the only lockfile — never run `npm install`, it would regenerate `package-lock.json`
 
@@ -29,4 +30,4 @@
 - Tailwind CSS v4 uses `@tailwindcss/vite` plugin (no tailwind.config.js)
 - LaTeX math rendering via remark-math/rehype-katex
 - Analytics supported via GA4 (`ga4Id`) and Umami (`umami.websiteId`) — configure in `src/config/site.ts`
-- No lint/typecheck scripts configured
+- No lint script configured; `pnpm run check` runs `astro check` but is not wired into CI, and currently reports pre-existing type errors in `src/`

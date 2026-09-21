@@ -6,7 +6,7 @@ and live at <https://shevinum.dev>.
 
 ## Running it locally
 
-Node.js >= 22.12.0 is required. The package manager is pnpm (`packageManager: pnpm@11.20.0`)
+Node.js >= 24 is required. The package manager is pnpm (`packageManager: pnpm@11.20.0`)
 and `pnpm-lock.yaml` is the only lockfile in the repo — do not install with npm or yarn.
 
 ```bash
@@ -20,10 +20,11 @@ The dev server starts at `http://localhost:4321`.
 | :--- | :--- |
 | `pnpm run dev` | Start the local dev server |
 | `pnpm run build` | Build the production site into `./dist/` |
+| `pnpm run check` | Run the Astro/TypeScript type checker |
 | `pnpm run preview` | Serve the production build locally |
 | `pnpm run astro` | Run the Astro CLI directly |
 
-Those four are the only scripts in `package.json`.
+Those five are the only scripts in `package.json`.
 
 ## Where the content lives
 
