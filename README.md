@@ -5,8 +5,6 @@
 [![TypeScript](https://img.shields.io/badge/TypeScript-3178C6?style=for-the-badge&logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
 [![License](https://img.shields.io/badge/MIT-44CC11?style=for-the-badge)](https://opensource.org/license/mit)
 
-![Page Screenshot](public/main_page.jpg)
-
 A fast, minimalist, and highly customizable Astro template designed specifically for researchers, professors, PhD students, and academics. 
 
 Strongly inspired by [Academic Pages](https://github.com/academicpages/academicpages.github.io) and [AstroPaper](https://github.com/satnaing/astro-paper), this template prioritizes content readability, SEO discoverability, and ease of configuration without touching the UI code.
@@ -80,13 +78,6 @@ This project follows a centralized configuration architecture and is driven enti
 │   └── types/              # TypeScript interfaces (content, display, config, themes)
 └── content.config.ts       # Zod schemas for all markdown collections
 ```
-
-## 📖 Documentation & Setup
-
-For a comprehensive, step-by-step guide on how to configure your site, modify the design, and write new content, please refer to the dedicated setup post included in this template:
-
-**👉 [Setting up Your Academic Portfolio](src/content/posts/setting-up-portfolio.md)**
-
 
 ## 📋 Configuration
 
