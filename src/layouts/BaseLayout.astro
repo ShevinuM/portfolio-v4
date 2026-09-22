@@ -200,14 +200,23 @@ const jsonLd = {
                 const toggle = document.getElementById("theme-toggle");
                 if (toggle) {
                     toggle.addEventListener("click", () => {
-                        const current =
-                            document.documentElement.getAttribute("data-theme");
+                        const root = document.documentElement;
+                        const current = root.getAttribute("data-theme");
                         const next = current === "dark" ? "light" : "dark";
-                        document.documentElement.setAttribute(
-                            "data-theme",
-                            next,
-                        );
+
+                        // Swap instantly. Letting each element interpolate its
+                        // own colour produces a muddy mid-transition blend.
+                        root.classList.add("theme-switching");
+                        root.setAttribute("data-theme", next);
                         localStorage.setItem("theme", next);
+
+                        // Two frames: the first lets the new colours paint,
+                        // the second re-enables transitions for hover states.
+                        requestAnimationFrame(() => {
+                            requestAnimationFrame(() => {
+                                root.classList.remove("theme-switching");
+                            });
+                        });
                     });
                 }
             }

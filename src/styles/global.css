@@ -434,6 +434,9 @@ a:hover,
     object-fit: cover;
     border: 2px solid var(--border);
     transition: border-color 0.3s ease;
+    /* Breathing room before the name. Reset below 1024px, where the sidebar
+       becomes a row and the avatar sits beside the text rather than above it. */
+    margin-bottom: 1.25rem;
 }
 
 .sidebar-avatar:hover {
@@ -455,7 +458,7 @@ a:hover,
     display: flex;
     align-items: center;
     gap: 0.5rem;
-    margin-top: 0.25rem;
+    margin-top: 0.6rem;
 }
 
 .sidebar-bio {
@@ -830,6 +833,21 @@ a:hover,
     }
 }
 
+/* Suppress every transition for the instant the theme flips.
+
+   Without this, each element animates its own colour independently over
+   0.2-0.3s. The palettes are far apart, so the interpolated midpoint is a
+   muddy low-contrast blend, and text fades on a different clock than the
+   background behind it. The toggle adds this class, changes data-theme, then
+   removes it on the next frame, so the swap is instantaneous while hover and
+   focus transitions keep working. */
+html.theme-switching,
+html.theme-switching *,
+html.theme-switching *::before,
+html.theme-switching *::after {
+    transition: none !important;
+}
+
 .animate-in {
     animation: fadeIn 0.5s ease-out forwards;
 }
@@ -911,6 +929,7 @@ a:hover,
     .sidebar-avatar {
         width: 112px;
         height: 112px;
+        margin-bottom: 0;
     }
 
     .main-body {
