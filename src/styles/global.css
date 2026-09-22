@@ -850,6 +850,28 @@ html.theme-switching *::after {
     transition: none !important;
 }
 
+/* Astro's ClientRouter cross-fades the whole document on navigation:
+   ::view-transition-old(root) and -new(root) each run a 250ms fade with
+   mix-blend-mode: plus-lighter. Most of the page — sidebar, navbar, footer —
+   is identical between routes, so that additively composites two copies of the
+   same antialiased text. Worse, .main-body below is sliding up 10px at the
+   same time, so the two copies sit at different offsets. The result reads as a
+   shimmer or vibration.
+
+   Suppressing the root animation makes the swap instant. The entrance
+   animation on .main-body still plays, so navigation keeps a sense of motion
+   without anything being drawn twice.
+
+   The group animation goes too: routes differ in height (the Resume page is
+   909px against 630px for About), so it would tween the snapshot geometry and
+   produce its own morph. */
+::view-transition-group(root),
+::view-transition-old(root),
+::view-transition-new(root) {
+    animation: none;
+    mix-blend-mode: normal;
+}
+
 .animate-in {
     animation: fadeIn 0.5s ease-out forwards;
 }
