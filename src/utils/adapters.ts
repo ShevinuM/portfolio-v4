@@ -42,6 +42,6 @@ export function getDetailItem(entry: any, collection: string): DetailItem {
     
     return {
         ...listing,
-        backHref: `/${collectionPath(collection)}`,
+        backHref: `/${collectionPath(collection)}/`,
     };
 }

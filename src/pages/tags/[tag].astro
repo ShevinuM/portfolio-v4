@@ -36,7 +36,7 @@ const content = await getContentByTag(tagName);
                 tags: item.data.tags,
                 externalUrl: item.data.external_url,
             };
-            const href = `/${collectionPath(item.collection)}/${item.id}`;
+            const href = `/${collectionPath(item.collection)}/${item.id}/`;
             return <BaseItemCard {...listingItem} href={href} />;
         })}
     </section>
