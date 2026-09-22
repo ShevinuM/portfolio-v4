@@ -16,10 +16,15 @@ export const PAGES: PagesConfig = {
         subtitle: "A collection of research papers and scientific articles.",
         isActive: true,
     },
+    // Disabled until there is a talk to list. The routes themselves live at
+    // src/pages/_talks — Astro ignores anything under src/pages prefixed with
+    // an underscore, so no /talks page is emitted and it stays out of the
+    // sitemap. Leaving isActive false as well means the routes still refuse to
+    // render if that directory is ever renamed back without updating the nav.
     talks: {
         title: "Talks & Presentations",
         subtitle: "Public lectures, colloquia, and conference presentations.",
-        isActive: true,
+        isActive: false,
     },
     projects: {
         title: "Code & Projects",
