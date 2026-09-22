@@ -107,3 +107,12 @@ Cloudflare/worker configuration to maintain, and none is needed.
 
 Built from the [academic-portfolio-astro](https://github.com/rubzip/academic-portfolio-astro)
 template by rubzip, MIT licensed — see `LICENSE`.
+
+## Licence
+
+Two different terms apply, and `LICENSE-CONTENT.md` sets them out in full:
+
+- **Site code** — MIT, © 2026 Rubén Gijón. Layouts, components, styles and build
+  setup. Reuse them.
+- **Written content and images** — © 2026 Shevinu Nawalage, all rights reserved.
+  The posts, publication entries, biography, résumé and photographs.
