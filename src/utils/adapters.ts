@@ -1,5 +1,20 @@
 import type { ListingItem, DetailItem } from "../types";
 
+/**
+ * Public URL segment for a collection.
+ *
+ * Collection names and URL paths are not always the same. The blog is stored
+ * as the `posts` collection but served at /blog, so anything building a link
+ * must go through this instead of interpolating the collection name directly.
+ */
+const COLLECTION_PATHS: Record<string, string> = {
+    posts: "blog",
+};
+
+export function collectionPath(collection: string): string {
+    return COLLECTION_PATHS[collection] ?? collection;
+}
+
 function formatDate(dateValue: string | Date | undefined): string | undefined {
     if (!dateValue) return undefined;
     const date = typeof dateValue === 'string' ? new Date(dateValue) : dateValue;
@@ -27,6 +42,6 @@ export function getDetailItem(entry: any, collection: string): DetailItem {
     
     return {
         ...listing,
-        backHref: collection === 'posts' ? '/posts' : `/${collection}`,
+        backHref: `/${collectionPath(collection)}`,
     };
 }

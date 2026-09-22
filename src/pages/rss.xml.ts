@@ -11,7 +11,7 @@ export async function GET(context: any) {
             title: post.data.title,
             pubDate: post.data.date,
             description: post.data.description,
-            link: `/posts/${post.id}/`,
+            link: `/blog/${post.id}/`,
         })),
         ...publications.map((pub: any) => ({
             title: `[Publication] ${pub.data.title}`,

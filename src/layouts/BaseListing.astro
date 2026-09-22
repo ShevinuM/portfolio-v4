@@ -2,7 +2,7 @@
 import { getCollection } from "astro:content";
 import BaseLayout from "../layouts/BaseLayout.astro";
 import BaseItemCard from "../components/ui/BaseItemCard.astro";
-import { getListingItem } from "../utils/adapters";
+import { getListingItem, collectionPath } from "../utils/adapters";
 
 interface Props {
     collection: "publications" | "talks" | "projects" | "posts" | "all";
@@ -35,7 +35,7 @@ const sortedEntries = entries.sort((a: any, b: any) => {
     <section class="item-list">
         {sortedEntries.map((entry: any) => {
             const item = getListingItem(entry);
-            return <BaseItemCard {...item} href={`/${collection}/${entry.id}`} />;
+            return <BaseItemCard {...item} href={`/${collectionPath(collection)}/${entry.id}`} />;
         })}
     </section>
 

@@ -5,7 +5,7 @@ export const NAV_LINKS: NavLink[] = [
     { href: "/resume", label: "Resume", isActive: true },
     { href: "/publications", label: "Publications", isActive: true },
     { href: "/projects", label: "Code", isActive: true },
-    { href: "/posts", label: "Blog", isActive: true },
+    { href: "/blog", label: "Blog", isActive: true },
     { href: "/tags", label: "Tags", isActive: true },
     // Disabled until there is a talk to list. To bring the section back:
     // rename src/pages/_talks back to src/pages/talks, then set isActive true
