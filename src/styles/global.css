@@ -552,7 +552,9 @@ a:hover,
 .footer {
     padding: 1.5rem 2rem;
     display: flex;
-    justify-content: space-between;
+    /* Only the RSS link and theme toggle remain, so they anchor to the right.
+       space-between would leave them wherever a single child landed. */
+    justify-content: flex-end;
     align-items: center;
     font-size: 0.85rem;
     color: var(--foreground);
