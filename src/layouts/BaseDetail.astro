@@ -5,6 +5,7 @@ import BackLink from "../components/ui/BackLink.astro";
 import Tag from "../components/ui/Tag.astro";
 import Icon from "../components/ui/Icon.astro";
 import { getDetailItem } from "../utils/adapters";
+import { containsMath } from "../utils/math";
 import { SITE } from "../config";
 
 interface Props {
@@ -33,7 +34,7 @@ const description = entry.data.description || detail.description || SITE.desc;
 const ogImage = entry.data.image || SITE.ogImage;
 ---
 
-<BaseLayout title={detail.title} description={description} ogImage={ogImage} ogType="article">
+<BaseLayout title={detail.title} description={description} ogImage={ogImage} ogType="article" hasMath={containsMath(entry.body)}>
     <div class="flex justify-between items-center mb-4">
         <BackLink href={detail.backHref} label={collection} />
         {detail.externalUrl && (

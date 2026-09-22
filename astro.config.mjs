@@ -12,8 +12,19 @@ export default defineConfig({
     remarkPlugins: [remarkMath],
     rehypePlugins: [rehypeKatex],
   },
+  // 'always' inlined every stylesheet into every page, so each ClientRouter
+  // navigation re-downloaded and re-parsed the same ~88kB of CSS. 'auto' (the
+  // default) emits one shared stylesheet the browser caches across routes.
   build: {
-    inlineStylesheets: 'always'
+    inlineStylesheets: 'auto'
+  },
+  // ClientRouter's default prefetch strategy is 'hover', which never fires on
+  // a touchscreen — mobile taps paid the full round trip. 'tap' starts the
+  // fetch on touchstart/mousedown; the navbar opts into 'viewport' so the tabs
+  // are already warm by the time they're tapped.
+  prefetch: {
+    prefetchAll: true,
+    defaultStrategy: 'tap'
   },
   vite: {
     plugins: [tailwindcss()],
