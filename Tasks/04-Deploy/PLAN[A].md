@@ -91,7 +91,7 @@ Run from `/Users/shev/Development/portfolio-v4`:
 - [x] All verification checks pass. Verifier returned PASS on all 19 checks.
 - [x] `public/CNAME` exists, holds `shevinum.dev`, and reaches `dist/CNAME` after a build. 13 bytes, byte-identical.
 - [x] README documents the deploy flow and the manual steps the developer still owns. **Three, not two** — ruling 5 supersedes this line: Pages source, Pages custom domain, DNS.
-- [x] One commit (`291166f`), tree clean outside `Tasks/`.
+- [x] One commit (`5c5aa64`), tree clean outside `Tasks/`.
 
 ## Stop conditions
 

@@ -2,35 +2,35 @@
 
 **Verdict: PASS.** All 13 Verification-table rows and all four Acceptance criteria satisfied.
 
-Tree at `fe03d22`, branch `main`, no remote. Everything outside `Tasks/` is committed and clean.
+Tree at `fef6594`, branch `main`, no remote. Everything outside `Tasks/` is committed and clean.
 
 ## Commits
 
 | sha | subject | files | net |
 |---|---|---|---|
-| `8a76635` | Remove the Teaching section | 13 | +9 / −118 |
-| `1cb7d6a` | Remove the developer tools pages and Settings icon | 11 | +2 / −870 |
-| `c574460` | Drop the copyright line and switch to the Notepad light theme | 2 | small |
-| `fe03d22` | Remove the Claude Shannon demo content and assets | 26 | −1164 |
+| `ecdcc40` | Remove the Teaching section | 13 | +9 / −118 |
+| `071a717` | Remove the developer tools pages and Settings icon | 11 | +2 / −870 |
+| `fe20a39` | Drop the copyright line and switch to the Notepad light theme | 2 | small |
+| `fef6594` | Remove the Claude Shannon demo content and assets | 26 | −1164 |
 
 Each carries the `Co-Authored-By: Claude Opus 5 (1M context)` trailer.
 
 ## What was removed
 
-**Teaching (`8a76635`)** — `src/content/teaching/`, `src/pages/teaching/`, the `teaching` collection and its `collections` export entry in `content.config.ts`, the `PAGES.teaching` entry, the nav link, `interface Teaching` and its re-export, the four `teaching` references in `src/utils/tags.ts`, and the `"teaching"` member of the union types in `BaseListing.astro` and `BaseDetail.astro` plus the `"Institution"` ternary branch in the latter.
+**Teaching (`ecdcc40`)** — `src/content/teaching/`, `src/pages/teaching/`, the `teaching` collection and its `collections` export entry in `content.config.ts`, the `PAGES.teaching` entry, the nav link, `interface Teaching` and its re-export, the four `teaching` references in `src/utils/tags.ts`, and the `"teaching"` member of the union types in `BaseListing.astro` and `BaseDetail.astro` plus the `"Institution"` ternary branch in the latter.
 
-**Developer tools (`1cb7d6a`)** — all five `src/pages/dev-tools/` pages, `src/layouts/DevToolsLayout.astro`, `src/assets/icons/Settings.svg`, the `showDevTools` const and its gated block in the footer, and the `addDevToolsInProduction` flag with its `SettingsConfig` field.
+**Developer tools (`071a717`)** — all five `src/pages/dev-tools/` pages, `src/layouts/DevToolsLayout.astro`, `src/assets/icons/Settings.svg`, the `showDevTools` const and its gated block in the footer, and the `addDevToolsInProduction` flag with its `SettingsConfig` field.
 
-**Footer and theme (`c574460`)** — the `©` line and `currentYear`; the attribution span moved into the left `<div>` and lost `hidden sm:inline-block`; `themeLight` switched to `light_notepad`.
+**Footer and theme (`fe20a39`)** — the `©` line and `currentYear`; the attribution span moved into the left `<div>` and lost `hidden sm:inline-block`; `themeLight` switched to `light_notepad`.
 
-**Shannon content (`fe03d22`)** — 12 demo markdown files across four collections, `public/shannon.jpg`, `public/main_page.jpg`, and the whole `example_contents/` directory. Four `.gitkeep` files added so the collection directories survive a clone.
+**Shannon content (`fef6594`)** — 12 demo markdown files across four collections, `public/shannon.jpg`, `public/main_page.jpg`, and the whole `example_contents/` directory. Four `.gitkeep` files added so the collection directories survive a clone.
 
 **Documentation** — delete-only edits removing references to files this phase deleted: `README.md` (teaching mentions, the tree leaf and its connector, the `main_page.jpg` screenshot, the `## Documentation & Setup` section), `AGENTS.md` (the `teaching/` list item), `DESIGN-GUIDE.md` (the `DevToolsLayout.astro` tree line and its connector).
 
 ## Gates run by the orchestrator
 
-- **Full build at `fe03d22` from a purged cache:** exit 0, **8 pages**, zero `[ERROR]` lines.
-- **Per-commit isolation build** (detached worktree, cold cache each time): `8a76635` → 52 pages, `1cb7d6a` → 47, `c574460` → 47, `fe03d22` → 8. All exit 0, all zero errors.
+- **Full build at `fef6594` from a purged cache:** exit 0, **8 pages**, zero `[ERROR]` lines.
+- **Per-commit isolation build** (detached worktree, cold cache each time): `ecdcc40` → 52 pages, `071a717` → 47, `fe20a39` → 47, `fef6594` → 8. All exit 0, all zero errors.
 
 ## Final footer markup
 

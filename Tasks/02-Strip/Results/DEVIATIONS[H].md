@@ -18,7 +18,7 @@ Rejected: inserting placeholder identity. It would be a third identity that phas
 
 ## 3. `bio.md` now points at a deleted avatar (Ruling 10)
 
-`src/content/bio.md` declares `avatar: "shannon.jpg"` and `public/shannon.jpg` was deleted in `fe03d22`. `src/components/layout/LeftSidebar.astro` renders it as a plain `<img src={`/${bio.avatar}`}>`, which Astro does not resolve or validate, **so the build stays green and the image simply 404s at runtime on every page.**
+`src/content/bio.md` declares `avatar: "shannon.jpg"` and `public/shannon.jpg` was deleted in `fef6594`. `src/components/layout/LeftSidebar.astro` renders it as a plain `<img src={`/${bio.avatar}`}>`, which Astro does not resolve or validate, **so the build stays green and the image simply 404s at runtime on every page.**
 
 `bio.md` was left untouched because the plan reserves it for phase 03 twice. **Phase 03 must fix this** — it is the most visible artefact of the strip.
 

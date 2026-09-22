@@ -6,7 +6,7 @@ site is live: create the repo and push, then the three settings listed in `NOT_D
 
 ## What landed
 
-**Commit `291166f` — "Configure GitHub Pages deploy for shevinum.dev"**
+**Commit `5c5aa64` — "Configure GitHub Pages deploy for shevinum.dev"**
 Two files, 38 lines added, nothing removed.
 
 1. **`public/CNAME` created.** It holds exactly `shevinum.dev` and a newline — 13 bytes,

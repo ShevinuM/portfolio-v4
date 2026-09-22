@@ -5,7 +5,7 @@ Phase 01 closed with a verifier PASS.
 ## Tree state you inherit
 
 - `/Users/shev/Development/portfolio-v4` is a git repo on branch `main`, **no remote**.
-- Commits: `04b3c6e Import academic-portfolio-astro @ 6f296c2` (root), then a task-state commit holding phase 01's close-out. Everything outside `Tasks/` is clean and committed.
+- Commits: `5ec2b22 Import academic-portfolio-astro @ 6f296c2` (root), then a task-state commit holding phase 01's close-out. Everything outside `Tasks/` is clean and committed.
 - `node_modules/` is installed (294 packages). `dist/` holds a green build of the untouched template — 56 HTML pages.
 - The tracked file list is identical to template `6f296c2` (109 files). Nothing was dropped by `.gitignore`.
 

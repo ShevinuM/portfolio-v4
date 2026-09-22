@@ -5,7 +5,7 @@ Status: CLOSED. Verifier returned PASS.
 `portfolio-v4` is a working Astro site, its own git repository, with one baseline commit:
 
 ```
-04b3c6e  Import academic-portfolio-astro @ 6f296c2
+5ec2b22  Import academic-portfolio-astro @ 6f296c2
 ```
 
 124 files, on branch `main`, no git remote, no history inherited from the template author.

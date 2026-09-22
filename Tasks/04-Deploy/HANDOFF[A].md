@@ -4,7 +4,7 @@ You are the last phase of the run. Phases 01, 02, 02b and 03 closed with a verif
 
 ## Tree state you inherit
 
-- `/Users/shev/Development/portfolio-v4`, branch `main` at `f3078a7`, **no remote**. Clean outside `Tasks/`.
+- `/Users/shev/Development/portfolio-v4`, branch `main` at `e8ad7fd`, **no remote**. Clean outside `Tasks/`.
 - **`pnpm run build` → exit 0, 26 pages.** Only collection warning: `talks` (×19), empty by design and permanent. **Any other collection warning is real breakage**, even at exit 0.
 - Astro 6.4.8, Node floor `>=24`, `typescript@^6.0.3` + `@astrojs/check` installed, `pnpm run check` exists and exits 1 on 13 pre-existing type errors. **The check is deliberately NOT in CI — do not add it.**
 - `astro.config.mjs` has `site: 'https://shevinum.dev'` and **no `base`**. Do not reintroduce one.

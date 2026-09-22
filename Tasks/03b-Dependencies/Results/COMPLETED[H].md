@@ -10,7 +10,7 @@
 
 **2 commits. Build still green: exit 0, 26 pages — the same as before the phase started.**
 
-## 1. Dependencies updated — commit `da9a3dd`
+## 1. Dependencies updated — commit `a8ced33`
 
 All 9 outdated packages moved to the newest version their existing range allows.
 
@@ -32,7 +32,7 @@ All 9 outdated packages moved to the newest version their existing range allows.
 
 Five real fixes came in: 2 high-severity Astro bugs (an XSS and a host-header SSRF), 1 moderate Astro XSS, 1 low, and an XML injection in the RSS feed generator.
 
-## 2. Node 24 and the type checker — commit `f3078a7`
+## 2. Node 24 and the type checker — commit `e8ad7fd`
 
 1. **Node 24 is set in three places.** `engines.node` is `">=24"` (a floor, not a pin — your machine runs 26). A new `.nvmrc` says `24`. The deploy workflow says `24`.
 2. **Exactly one line of `.github/workflows/deploy.yml` changed**, the `node-version:` line. Phase 04 still owns the rest of that file.

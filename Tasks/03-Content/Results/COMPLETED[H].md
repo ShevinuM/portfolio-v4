@@ -9,10 +9,10 @@ warns, which is correct — you chose to keep the section with an empty listing.
 
 ## The four commits
 
-1. **`69ce4b9`** — Replace the demo bio and CV with Shevinu Nawalage's, and rename CV to Resume
-2. **`e995e3b`** — Add the NER survey, the Digest project and the brain-rot article
-3. **`ffeb109`** — Replace the demo identity with real site metadata and social links
-4. **`3ba2f5d`** — Rewrite the README and AGENTS notes for this repo, and set the package name
+1. **`676b039`** — Replace the demo bio and CV with Shevinu Nawalage's, and rename CV to Resume
+2. **`c98d886`** — Add the NER survey, the Digest project and the brain-rot article
+3. **`a2941a9`** — Replace the demo identity with real site metadata and social links
+4. **`392d0f1`** — Rewrite the README and AGENTS notes for this repo, and set the package name
 
 Each commit was built and checked on its own before the next one started.
 

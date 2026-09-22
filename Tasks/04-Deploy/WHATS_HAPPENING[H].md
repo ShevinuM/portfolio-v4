@@ -7,7 +7,7 @@ does not create a GitHub repo, does not push, and does not touch DNS.
 
 ## Log
 
-1. **Phase started.** Tree is clean at `6e25a12` and the four in-scope files are read:
+1. **Phase started.** Tree is clean at `ee72ba7` and the four in-scope files are read:
    `.github/workflows/deploy.yml`, `astro.config.mjs`, `public/` and `README.md`.
    `public/CNAME` does not exist yet. `astro.config.mjs` already has
    `site: 'https://shevinum.dev'` and no `base`, as expected.
@@ -33,7 +33,7 @@ does not create a GitHub repo, does not push, and does not touch DNS.
    section to `README.md`, and verify the workflow and `astro.config.mjs` without editing them.
    `deploy.yml` is deliberately not touched. Next: I run the build gate myself, then the
    verifier checks the committed tree.
-6. **Executor returned and the commit landed: `291166f` "Configure GitHub Pages deploy for
+6. **Executor returned and the commit landed: `5c5aa64` "Configure GitHub Pages deploy for
    shevinum.dev".** Two files changed, `README.md` and `public/CNAME`, 38 lines added and
    nothing removed. `deploy.yml`, `astro.config.mjs`, `package.json` and the lockfiles are
    untouched, confirmed by diff.

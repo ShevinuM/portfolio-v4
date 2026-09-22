@@ -4,7 +4,7 @@ The steps ran exactly as written. The plan itself was corrected twice before dis
 
 ## 1. Two verification rows in the plan were wrong and were fixed before the executor ran
 
-**Ruling 12 — the `src/` diff row checked against the wrong point in history.** The plan said `git diff HEAD --stat -- src/`. Once the phase commits, `HEAD` *is* that commit, so the diff is empty and the check would have failed a correct tree. Corrected to `git diff 6d8a8bc HEAD --stat -- src/`, where `6d8a8bc` is the commit before the phase. It returned exactly `src/content.config.ts | 2 +-`.
+**Ruling 12 — the `src/` diff row checked against the wrong point in history.** The plan said `git diff HEAD --stat -- src/`. Once the phase commits, `HEAD` *is* that commit, so the diff is empty and the check would have failed a correct tree. Corrected to `git diff 7420a3d HEAD --stat -- src/`, where `7420a3d` is the commit before the phase. It returned exactly `src/content.config.ts | 2 +-`.
 
 **Ruling 13 — the plan's docs grep could have pointed outside this phase's scope.** The check greps `DESIGN-GUIDE.md`, which this phase is not allowed to edit. A hit there would have been unfixable. I checked before dispatching: `DESIGN-GUIDE.md` mentions npm zero times, so no problem existed. The full list of 10 lines to convert, all in `README.md` and `AGENTS.md`, was captured up front and handed to the executor rather than left to a search.
 

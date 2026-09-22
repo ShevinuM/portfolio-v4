@@ -37,7 +37,7 @@ Write it here, mark the phase BLOCKED, and stop that phase. Do not guess.
 
 **What I found.** The single critical row is `Astro: Remote code execution through AVIF image optimization` (GHSA-26w7-cxv4-gfx2). It affects every Astro below `7.2.8`. No Astro 6 release fixes it. The plan's Context said the fix was in-range and free. That was wrong.
 
-**What phase 03b did about it.** Nothing, and it ran everything else, because none of the other work depends on this. Both commits landed — `da9a3dd` and `f3078a7` — and the verifier returned 16 checks PASS and this one FAIL. The in-range update to `6.4.8` still clears 5 real advisories:
+**What phase 03b did about it.** Nothing, and it ran everything else, because none of the other work depends on this. Both commits landed — `a8ced33` and `e8ad7fd` — and the verifier returned 16 checks PASS and this one FAIL. The in-range update to `6.4.8` still clears 5 real advisories:
 1. Astro, high — reflected XSS via unescaped slot name (fixed in 6.3.3).
 2. Astro, high — host header SSRF in the prerendered error page (fixed in 6.4.6).
 3. Astro, moderate — XSS via unescaped attribute names in spread props (fixed in 6.4.6).

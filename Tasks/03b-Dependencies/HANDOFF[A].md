@@ -4,7 +4,7 @@ Phases 01, 02, 02b and 03 all closed with a verifier PASS. The site is now the d
 
 ## Tree state you inherit
 
-- `/Users/shev/Development/portfolio-v4`, branch `main` at `3ba2f5d`, **no remote**. Clean outside `Tasks/`.
+- `/Users/shev/Development/portfolio-v4`, branch `main` at `392d0f1`, **no remote**. Clean outside `Tasks/`.
 - **`pnpm run build` → exit 0, 26 pages.** That is your step-1 baseline figure. It must not change.
 - The only collection warning is **`talks` (×19)**, which is empty by design and will warn forever. **Any *other* collection warning after your update is real breakage**, even though the build still exits 0.
 - `node_modules/` is a pnpm frozen install. `dist/` is a current 26-page build.

@@ -181,16 +181,16 @@ Acceptance criterion 3 requires each commit to build green on its own. Run by th
 
 | commit | exit | pages | `[ERROR]` lines | subject |
 |---|---|---|---|---|
-| `8a76635` | 0 | 52 | 0 | Remove the Teaching section |
-| `1cb7d6a` | 0 | 47 | 0 | Remove the developer tools pages and Settings icon |
-| `c574460` | 0 | 47 | 0 | Drop the copyright line and switch to the Notepad light theme |
-| `fe03d22` | 0 | 8 | 0 | Remove the Claude Shannon demo content and assets |
+| `ecdcc40` | 0 | 52 | 0 | Remove the Teaching section |
+| `071a717` | 0 | 47 | 0 | Remove the developer tools pages and Settings icon |
+| `fe20a39` | 0 | 47 | 0 | Drop the copyright line and switch to the Notepad light theme |
+| `fef6594` | 0 | 8 | 0 | Remove the Claude Shannon demo content and assets |
 
 Counts independently reproduce each executor's self-report, which is the point of running it separately.
 
 **Method note, so this is not rediscovered.** The first attempt symlinked the main `node_modules` into the worktree and **every commit failed identically** with:
 `Could not load .../astro/components/ClientRouter.astro?astro&type=style... No cached compile metadata found`.
-That is a **harness artefact, not a commit defect** — Vite resolves the Astro component through the symlink to a path outside the worktree root and its compile-metadata cache misses. The tell was that `fe03d22` failed there while building green in the real tree moments earlier. The fix is a hardlink copy instead of a symlink:
+That is a **harness artefact, not a commit defect** — Vite resolves the Astro component through the symlink to a path outside the worktree root and its compile-metadata cache misses. The tell was that `fef6594` failed there while building green in the real tree moments earlier. The fix is a hardlink copy instead of a symlink:
 ```
 cp -al /Users/shev/Development/portfolio-v4/node_modules "$WT/node_modules"
 ```

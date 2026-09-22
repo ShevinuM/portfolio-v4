@@ -30,7 +30,7 @@ Both are written up in `Results/DEVIATIONS[H].md` at the end.
 - 03:20 — Checked whether Tabler ships a ResearchGate icon. It does not (confirmed against the
   published 3.47.0 icon list). Using the planned fallback: the graduation-cap glyph.
 - 03:21 — 14 rulings written into `PLAN[A].md`. Dispatching executor 1 of 4.
-- 03:35 — Executor 1 returned. **Commit `69ce4b9`** — your bio and resume replaced the Claude Shannon
+- 03:35 — Executor 1 returned. **Commit `676b039`** — your bio and resume replaced the Claude Shannon
   demo content, and `/cv` became `/resume` (nav label, page title and URL). Build green: exit 0, 8 pages.
 - 03:36 — Check dispatched on commit 1. Executor 1 also found two pre-existing template bugs it was not
   allowed to touch: the avatar `<img>` renders `width="1"` because of a stray comment in
@@ -39,7 +39,7 @@ Both are written up in `Results/DEVIATIONS[H].md` at the end.
   `portfolio-v3/src/data/resume.tsx`. Verdict: "PASS (all 15 checks + fabrication audit)" and
   "No fabrication found." Your bio text is your own summary word for word, including its original wording.
 - 03:41 — Executor 2 of 4 dispatched: the NER paper, the Digest project, and the brain-rot article.
-- 03:44 — Executor 2 returned. **Commit `e995e3b`** — the NER survey is under Publications, the brain-rot
+- 03:44 — Executor 2 returned. **Commit `c98d886`** — the NER survey is under Publications, the brain-rot
   article under Blog, Shevinu's Digest under Code. Build green: exit 0, **26 pages** (was 8).
   The stale-content trap is clear: only `talks` still warns, which is correct — it is empty on purpose.
 - 03:44 — Check dispatched on commit 2, with a sentence-by-sentence fabrication audit of the
@@ -48,7 +48,7 @@ Both are written up in `Results/DEVIATIONS[H].md` at the end.
   found in either file." The article body is byte-identical to your v3 original (diff produced no output).
 - 03:47 — Executor 3 of 4 dispatched: real social links, real site metadata, the ResearchGate icon,
   and the site URL.
-- 03:52 — Executor 3 returned. **Commit `ffeb109`** — Claude Shannon is gone from the site entirely.
+- 03:52 — Executor 3 returned. **Commit `a2941a9`** — Claude Shannon is gone from the site entirely.
   Your GitHub, LinkedIn, ResearchGate and email are live in the sidebar, the site is `shevinum.dev`,
   and the social-share image is your portrait. Build green: exit 0, 26 pages, only `talks` warns.
   I searched `src/` and `dist/` for "shannon", "bell-labs", "petoskey" and "alexmercer" myself: **no hits**.
@@ -56,7 +56,7 @@ Both are written up in `Results/DEVIATIONS[H].md` at the end.
   Tabler does not ship a ResearchGate glyph. It looks like an academic-profile icon, not a broken image.
 - 03:56 — **Commit 3 PASSED.** Verdict: "PASS — all 20 checks and the fabrication audit pass."
 - 03:56 — Executor 4 of 4 dispatched: the README, AGENTS.md and the package name. Last commit of the phase.
-- 04:02 — Executor 4 returned. **Commit `3ba2f5d`** — the README now describes your site instead of the
+- 04:02 — Executor 4 returned. **Commit `392d0f1`** — the README now describes your site instead of the
   template, AGENTS.md is accurate, and the package is named `portfolio-v4`. All four commits are in.
 - 04:03 — Final build gate, caches cleared: exit 0, **26 pages**, `talks` the only warning, no icon errors.
   All seven nav links resolve to a real page. Full verification pass dispatched — the last step.

@@ -23,7 +23,7 @@ Astro 7 and KaTeX 0.18 are **not** done here. Both are major-version migrations 
 
 **04:20 — Executor dispatched for commit 1 of 2: the in-range dependency updates.** It runs `pnpm update --no-save` so only the lockfile changes and no version range in `package.json` moves. Next: I run the build gate myself, then the verifier checks the result.
 
-**04:23 — Commit 1 of 2 landed: `da9a3dd`.** All nine packages are at the newest version their range allows. Only `pnpm-lock.yaml` changed — no version range in `package.json` moved. Astro is 6.4.8, katex 0.16.47, tailwind 4.3.3.
+**04:23 — Commit 1 of 2 landed: `a8ced33`.** All nine packages are at the newest version their range allows. Only `pnpm-lock.yaml` changed — no version range in `package.json` moved. Astro is 6.4.8, katex 0.16.47, tailwind 4.3.3.
 
 **Security: 34 advisories down to 14.** High severity dropped from 18 to 7, moderate from 12 to 4. The 1 critical remains, for the reason in Q8. The build still exits 0 with 26 pages and only the expected `talks` warning.
 
@@ -37,7 +37,7 @@ Everything else passed: build exit 0, 26 pages, `talks`-only warnings, astro 6.4
 
 **04:30 — Executor dispatched for commit 2 of 2:** Node 24, `typescript` + `@astrojs/check`, the `pnpm run check` script, and the README/AGENTS updates.
 
-**04:36 — Commit 2 of 2 landed: `f3078a7`.** Node 24 is set in three places: `engines.node` is `">=24"`, a new `.nvmrc` says `24`, and the deploy workflow says `24`. Exactly one line of the workflow changed — phase 04 still owns the rest of it. `README.md` and `AGENTS.md` now say Node 24 and document the new script.
+**04:36 — Commit 2 of 2 landed: `e8ad7fd`.** Node 24 is set in three places: `engines.node` is `">=24"`, a new `.nvmrc` says `24`, and the deploy workflow says `24`. Exactly one line of the workflow changed — phase 04 still owns the rest of it. `README.md` and `AGENTS.md` now say Node 24 and document the new script.
 
 **The type checker now runs, and it reports 13 errors.** `pnpm run check` works and exits 1. All 13 errors and 8 hints are pre-existing defects in the template's `src/`, in 7 files. **Nothing was fixed and nothing under `src/` was touched** — that was the plan's rule, and fixing them is a separate job. The check is deliberately not wired into CI, so it cannot block a deploy.
 
@@ -51,7 +51,7 @@ Everything else passed: build exit 0, 26 pages, `talks`-only warnings, astro 6.4
 
 The failing check is the critical Astro advisory. The verifier called it "a plan-premise defect ... not a work-quality defect" and judged the phase "**sound, proceed**" for phase 04. **It needs your decision, not more work — see Q8 in `Tasks/OPEN_QUESTIONS[H].md`.**
 
-**What landed: 2 commits.** `da9a3dd` (9 dependencies updated in range, 34 security advisories down to 14) and `f3078a7` (Node 24 in three places, `typescript` + `pnpm run check`, docs).
+**What landed: 2 commits.** `a8ced33` (9 dependencies updated in range, 34 security advisories down to 14) and `e8ad7fd` (Node 24 in three places, `typescript` + `pnpm run check`, docs).
 
 **Build is green: exit 0, 26 pages, `talks`-only warning.** Unchanged from before the phase.
 

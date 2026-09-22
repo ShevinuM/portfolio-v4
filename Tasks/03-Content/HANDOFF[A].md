@@ -4,7 +4,7 @@ Phases 01, 02 and 02b all closed with a verifier PASS.
 
 ## Tree state you inherit
 
-- `/Users/shev/Development/portfolio-v4`, branch `main` at `172b8bb`, **no remote**. Clean outside `Tasks/`.
+- `/Users/shev/Development/portfolio-v4`, branch `main` at `666142a`, **no remote**. Clean outside `Tasks/`.
 - **The project is on pnpm.** `pnpm install --frozen-lockfile` and `pnpm run build` are the commands. `package-lock.json` is deleted.
 - `node_modules/` is a fresh pnpm frozen install. `dist/` holds a current **8-page** build.
 - `src/content/posts/`, `publications/`, `projects/`, `talks/` each contain only a `.gitkeep`. You refill the first three. `talks/` stays empty for good.

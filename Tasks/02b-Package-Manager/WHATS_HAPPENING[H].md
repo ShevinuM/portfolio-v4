@@ -4,7 +4,7 @@ Status: **CLOSED. Verifier said PASS.** One commit, zero fix rounds. Nothing is 
 
 ## What landed
 
-`172b8bb` — *Switch package manager from npm to pnpm*
+`666142a` — *Switch package manager from npm to pnpm*
 
 1. **The repo runs on pnpm.** One lockfile, `pnpm-lock.yaml`. `package-lock.json` is gone.
 2. **No package moved. 388 before, 388 after, zero differences.** `astro` is still 6.1.7. That was the whole risk and it is closed.
@@ -17,11 +17,11 @@ Full detail in `Results/COMPLETED[H].md`.
 
 ## Timeline
 
-- 03:00 — Re-run started. Tree clean at `6d8a8bc`, `package-lock.json` present, which the import step needs.
+- 03:00 — Re-run started. Tree clean at `7420a3d`, `package-lock.json` present, which the import step needs.
 - 03:01 — Re-captured the npm dependency set myself: 388 packages, `astro` 6.1.7.
 - 03:02 — Checked `DESIGN-GUIDE.md` before dispatching. It mentions npm zero times, so nothing to convert sat outside this phase's scope.
 - 03:03 — Executor dispatched.
-- 03:07 — Executor returned. One commit, `172b8bb`, exactly 7 files, nothing under `Tasks/`.
+- 03:07 — Executor returned. One commit, `666142a`, exactly 7 files, nothing under `Tasks/`.
 - 03:08 — Ran the gates myself. All green: frozen install exit 0, build exit 0 at 8 pages, lockfile diff zero differences.
 - 03:09 — Deleted `node_modules` and `dist` and rebuilt from nothing. Exit 0, 8 pages again.
 - 03:10 — Verifier dispatched to judge that evidence.

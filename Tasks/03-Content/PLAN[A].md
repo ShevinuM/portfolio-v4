@@ -88,8 +88,8 @@ Read-only:
 - [x] 12. `package.json`: set `"name": "portfolio-v4"`. Change nothing else.
 - [x] 13. Rewrite `README.md` to describe this site — what it is, how to run it, where content lives, and an attribution line crediting `rubzip/academic-portfolio-astro` (MIT). Delete the template's demo screenshot reference (`public/main_page.jpg` was removed in phase 02) and its "bootstrap from this template" instructions.
 - [x] 14. Update `AGENTS.md`: remove the `teaching/` and `talks/` references left over after phase 02. Keep the rest — it is useful architecture documentation.
-- [x] 15. `pnpm run build` must exit 0. — Satisfied by the phase orchestrator, not an executor. Final gate at `3ba2f5d` with `node_modules/.astro/data-store.json`, `.astro/` and `dist/` cleared first: `EXIT=0`, `26 page(s) built`, `talks` the only collection warning (x19), zero `Unknown Icon` lines.
-- [x] 16. Commit in reviewable units: — Done as four commits, one executor each, each gated and verified before the next was dispatched: `69ce4b9` (a), `e995e3b` (b), `ffeb109` (c), `3ba2f5d` (d). All four trailers verified by the final verifier.
+- [x] 15. `pnpm run build` must exit 0. — Satisfied by the phase orchestrator, not an executor. Final gate at `392d0f1` with `node_modules/.astro/data-store.json`, `.astro/` and `dist/` cleared first: `EXIT=0`, `26 page(s) built`, `talks` the only collection warning (x19), zero `Unknown Icon` lines.
+- [x] 16. Commit in reviewable units: — Done as four commits, one executor each, each gated and verified before the next was dispatched: `676b039` (a), `c98d886` (b), `a2941a9` (c), `392d0f1` (d). All four trailers verified by the final verifier.
       Original text: (a) assets + bio + cv, (b) publication + project + post, (c) config + astro.config + robots, (d) README + AGENTS + package name. Each commit ends with the `Co-Authored-By: Claude Opus 5 (1M context) <noreply@anthropic.com>` trailer.
 
 ## Verification
@@ -231,7 +231,7 @@ Do not redesign components, layouts or styles. Do not add new collections or new
     The line is `width={160} /* Maximum width in global.css for sidebar-avatar class */`. A `/* … */` comment inside an Astro element's attribute list is not a comment — it is parsed as attributes. The rendered `<img>` therefore carries junk attributes `*="true" Maximum="true" in="true" global.css="true" for="true" sidebar-avatar="true"` **and `width="1"` instead of `width="160"`**, on every page.
     Pre-existing: it rendered identically with the template's `shannon.jpg`, before this phase. `src/components/` is read-only to phase 03, so it is recorded in `Results/NOT_DONE[H].md` for whichever phase owns components. The fix is to move the comment into the frontmatter or use `{/* … */}` outside the tag.
 
-21. **Commit (a) is verified-green at `69ce4b9`.** Gate run by the phase orchestrator with `node_modules/.astro/data-store.json`, `.astro/` and `dist/` cleared first: `EXIT=0`, `8 page(s) built`, warnings `posts` ×6, `publications` ×5, `projects` ×4, `talks` ×4 — all four still expected at this point, because commit (b) is what fills the first three.
+21. **Commit (a) is verified-green at `676b039`.** Gate run by the phase orchestrator with `node_modules/.astro/data-store.json`, `.astro/` and `dist/` cleared first: `EXIT=0`, `8 page(s) built`, warnings `posts` ×6, `publications` ×5, `projects` ×4, `talks` ×4 — all four still expected at this point, because commit (b) is what fills the first three.
 
 22. **The `grep -c "/academic-portfolio-astro/" dist/index.html` check (Verification table line 120) is defective. Rewrite it.**
     Root cause: the pattern also matches the **allowed** footer attribution `https://github.com/rubzip/academic-portfolio-astro/`, hard-coded at `src/components/layout/Footer.astro:12` (read-only to phase 03, and the MIT attribution the plan explicitly wants kept). The table exempts that link from the `rubzip.github.io` grep but not from this one.
@@ -244,12 +244,12 @@ Do not redesign components, layouts or styles. Do not add new collections or new
     — a real `<svg>`, not an `[Icon Not Found]` span. Combined with a green build (`Icon.astro` throws on an unknown icon, ruling 11) the icon is proven resolved.
     The nested `<svg>` inside `<svg>` is how `Icon.astro` renders **every** icon (`set:html` of the whole file into a wrapper `<svg>`); it is pre-existing template behaviour, not something commit (c) introduced.
 
-24. **Commit (c) is at `ffeb109`. The ResearchGate icon came from the FALLBACK, not Tabler.**
+24. **Commit (c) is at `a2941a9`. The ResearchGate icon came from the FALLBACK, not Tabler.**
     `src/assets/icons/ResearchGate.svg` is a byte-identical copy of the former `GoogleScholar.svg` (git recorded it as `R100 GoogleScholar.svg => ResearchGate.svg`). Tabler was never fetched, per ruling 5. Goes in `DEVIATIONS[H].md` as a cosmetic substitution the developer may want to swap.
     Gate re-run independently by the phase orchestrator with caches cleared: `EXIT=0`, `26 page(s) built`, only `talks` warns (×19), zero `Unknown Icon` lines.
     Also independently confirmed: `og:image` on the deep route `/posts/how-brain-rotted-are-we/` is `https://shevinum.dev/picofme.jpeg` — root-absolute, not nested, so ruling 8's fix works in built output; the `shannon|bell-labs|petoskey|rubzip.github.io` sweep across `src/` and `dist/` returns **no output**; the `alexmercer|alex@|512 000 0000|starfolio` sweep returns **no output**.
 
-25. **Commit (d) is at `3ba2f5d`. All four commits are in. Final gate, run by the phase orchestrator with caches cleared: `EXIT=0`, `26 page(s) built`, `talks` the ONLY collection warning (×19), zero `Unknown Icon` lines.**
+25. **Commit (d) is at `392d0f1`. All four commits are in. Final gate, run by the phase orchestrator with caches cleared: `EXIT=0`, `26 page(s) built`, `talks` the ONLY collection warning (×19), zero `Unknown Icon` lines.**
     All seven `NAV_LINKS` hrefs resolve to a built page: `/` `/publications` `/talks` `/projects` `/posts` `/tags` `/resume` → all present under `dist/`. `dist/cv` does not exist.
 
 26. **`LICENSE` is the upstream template's MIT license, `Copyright (c) 2026 Rubén Gijón`.** Found by executor 4. The rewritten README therefore attributes the *template's* licence ("Built from the academic-portfolio-astro template by rubzip, MIT licensed") rather than claiming the developer chose MIT for his own site. **Whether Shevinu wants his own licence terms for his own content is a real open decision for him, not a documentation fix, and this phase deliberately did not make it.** Carry it forward.

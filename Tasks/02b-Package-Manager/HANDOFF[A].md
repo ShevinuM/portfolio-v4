@@ -6,8 +6,8 @@ This phase was added after the run started, at the developer's request: switch t
 
 ## Tree state you inherit
 
-- `/Users/shev/Development/portfolio-v4` is a git repo on `main` at `fe03d22`, **no remote**. Clean outside `Tasks/`.
-- Commits so far: `04b3c6e` template import, `78eedda` task state, then phase 02's four — `8a76635` teaching, `1cb7d6a` dev tools, `c574460` copyright + Notepad theme, `fe03d22` Shannon content.
+- `/Users/shev/Development/portfolio-v4` is a git repo on `main` at `fef6594`, **no remote**. Clean outside `Tasks/`.
+- Commits so far: `5ec2b22` template import, `f471ae7` task state, then phase 02's four — `ecdcc40` teaching, `071a717` dev tools, `fe20a39` copyright + Notepad theme, `fef6594` Shannon content.
 - **`npm run build` is exit 0 at 8 HTML pages.** That is your step-1 baseline figure. It dropped from 56 because phase 02 deleted all demo content.
 - `node_modules/` is installed via npm. `dist/` holds a current 8-page build.
 - Four content directories (`posts/`, `publications/`, `projects/`, `talks/`) hold only a `.gitkeep`. Phase 03 refills three of them; `talks/` stays empty for good.

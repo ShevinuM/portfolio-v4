@@ -4,7 +4,7 @@
 
 ## The commit
 
-`172b8bb` — *Switch package manager from npm to pnpm*
+`666142a` — *Switch package manager from npm to pnpm*
 
 It changed 7 files: `package-lock.json` (deleted), `pnpm-lock.yaml` (new), `pnpm-workspace.yaml` (new), `package.json`, `README.md`, `AGENTS.md`, and one line of `src/content.config.ts`.
 
