@@ -10,9 +10,11 @@ interface Props {
     subtitle?: string;
     entries?: any[];
     page?: any;
+    /** Overrides the site-wide social card for this listing. */
+    ogImage?: string;
 }
 
-const { collection, title, subtitle, entries: manualEntries, page } = Astro.props;
+const { collection, title, subtitle, entries: manualEntries, page, ogImage } = Astro.props;
 
 let entries = manualEntries || (collection !== "all" ? await getCollection(collection as any) : []);
 if (page) entries = page.data;
@@ -24,7 +26,7 @@ const sortedEntries = entries.sort((a: any, b: any) => {
 });
 ---
 
-<BaseLayout title={title}>
+<BaseLayout title={title} ogImage={ogImage}>
     {(title || subtitle) && (
         <header class="page-header">
             {title && <h1 class="page-title">{title}</h1>}
