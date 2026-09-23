@@ -4,7 +4,7 @@ import BaseLayout from "./BaseLayout.astro";
 import BackLink from "../components/ui/BackLink.astro";
 import Tag from "../components/ui/Tag.astro";
 import Icon from "../components/ui/Icon.astro";
-import { getDetailItem } from "../utils/adapters";
+import { getDetailItem, collectionPath } from "../utils/adapters";
 import { SITE } from "../config";
 
 interface Props {
@@ -35,7 +35,7 @@ const ogImage = entry.data.image || SITE.ogImage;
 
 <BaseLayout title={detail.title} description={description} ogImage={ogImage} ogType="article">
     <div class="flex justify-between items-center mb-4">
-        <BackLink href={detail.backHref} label={collection} />
+        <BackLink href={detail.backHref} label={collectionPath(collection)} />
         {detail.externalUrl && (
             <a href={detail.externalUrl} target="_blank" rel="noopener noreferrer" class="link">
                 View external
