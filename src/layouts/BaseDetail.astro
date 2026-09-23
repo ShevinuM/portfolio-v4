@@ -30,7 +30,12 @@ if (detail.extraInput) {
 }
 
 const description = entry.data.description || detail.description || SITE.desc;
-const ogImage = entry.data.image || SITE.ogImage;
+
+// Blog posts get a card of their own, generated from their title, date and
+// tags by src/pages/og/blog/[id].png.ts. Everything else falls back to the
+// site card unless the entry names an image.
+const generatedCard = collection === "posts" ? `/og/blog/${id}.png` : undefined;
+const ogImage = entry.data.image || generatedCard || SITE.ogImage;
 ---
 
 <BaseLayout title={detail.title} description={description} ogImage={ogImage} ogType="article">
