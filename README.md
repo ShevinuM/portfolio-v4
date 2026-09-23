@@ -1,8 +1,8 @@
-# shevinum.dev
+# shevinunawalage.com
 
 Shevinu Nawalage's personal site — about, publications, code, blog, and a resume.
 Built with [Astro](https://astro.build/) and Tailwind CSS v4, deployed to GitHub Pages
-and live at <https://shevinum.dev>.
+and live at <https://shevinunawalage.com>.
 
 ## Running it locally
 

@@ -46,6 +46,6 @@ export default defineConfig({
   vite: {
     plugins: [tailwindcss()],
   },
-  site: 'https://shevinum.dev',
+  site: 'https://shevinunawalage.com',
   integrations: [sitemap()],
 });
