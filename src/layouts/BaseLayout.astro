@@ -57,7 +57,10 @@ const jsonLd = {
 <html lang={SITE.lang}>
     <head>
         <meta charset="UTF-8" />
-        <meta name="viewport" content="width=device-width" />
+        <!-- initial-scale is not redundant: without it a single element wider
+        than the screen makes mobile Safari shrink the whole page to fit
+        instead of letting that one element scroll. -->
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" type="image/svg+xml" href={SITE.favicon} />
         <link rel="icon" href="/favicon.ico" sizes="any" />
         <meta name="generator" content={Astro.generator} />

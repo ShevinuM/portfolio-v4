@@ -607,6 +607,12 @@ a:hover,
     font-size: 1rem;
     line-height: 1.7;
     color: var(--foreground);
+    /* Reference lists end in bare URLs with no space to break on. Left alone
+       one of them is wider than a phone screen, and because it is a single
+       unbreakable word it widens the document rather than overflowing its own
+       box — which mobile Safari answers by shrinking the entire page, sidebar
+       and nav included, until the URL fits. */
+    overflow-wrap: break-word;
 }
 
 .prose h1 {
