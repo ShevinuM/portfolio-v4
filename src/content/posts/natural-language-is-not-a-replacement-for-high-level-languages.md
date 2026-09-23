@@ -46,7 +46,7 @@ In [On the Dangers of Stochastic Parrots](https://dl.acm.org/doi/10.1145/3442188
 
 Apple researchers tested this in [GSM-Symbolic](https://arxiv.org/pdf/2410.05229) [5]. Adding one irrelevant sentence to simple math problems dropped accuracy by up to 65%. The models weren't reasoning but matching problems to patterns they had seen before.
 
-François Chollet in [Dwarkesh Podcast](https://www.dwarkesh.com/p/francois-chollet) [6] mentioned that OpenAI set back the progress towards AGI by 5-10 years because frontier research is no longer being published and LLMs are an off-ramp on the path to AGI. Yann LeCun called LLMs a [distraction](https://www.fastcompany.com/91462273/yann-lecun-artificial-general-intelligence-databricks-google-gemini-3-flash) [7], and [out of 475 AI researchers, 76% said scaling up current AI approaches is unlikely or very unlikely to produce AGI](https://futurism.com/ai-researchers-tech-industry-dead-end) [8].
+François Chollet in [Dwarkesh Podcast](https://www.dwarkesh.com/p/francois-chollet) [6] mentioned that OpenAI set back the progress towards AGI by 5-10 years because frontier research is no longer being published and LLMs are an off-ramp on the path to AGI. Yann LeCun called AGI narrative a [distraction](https://www.fastcompany.com/91462273/yann-lecun-artificial-general-intelligence-databricks-google-gemini-3-flash) [7], and [out of 475 AI researchers, 76% said scaling up current AI approaches is unlikely or very unlikely to produce AGI](https://futurism.com/ai-researchers-tech-industry-dead-end) [8].
 
 What I said just scratched the surface here. This is a vast topic that belongs in a future blog post which I will write next.
 
