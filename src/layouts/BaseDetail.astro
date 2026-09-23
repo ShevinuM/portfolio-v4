@@ -4,7 +4,7 @@ import BaseLayout from "./BaseLayout.astro";
 import BackLink from "../components/ui/BackLink.astro";
 import Tag from "../components/ui/Tag.astro";
 import Icon from "../components/ui/Icon.astro";
-import { getDetailItem } from "../utils/adapters";
+import { getDetailItem, collectionPath } from "../utils/adapters";
 import { containsMath } from "../utils/math";
 import { SITE } from "../config";
 
@@ -31,12 +31,17 @@ if (detail.extraInput) {
 }
 
 const description = entry.data.description || detail.description || SITE.desc;
-const ogImage = entry.data.image || SITE.ogImage;
+
+// Blog posts get a card of their own, generated from their title, date and
+// tags by src/pages/og/blog/[id].png.ts. Everything else falls back to the
+// site card unless the entry names an image.
+const generatedCard = collection === "posts" ? `/og/blog/${id}.png` : undefined;
+const ogImage = entry.data.image || generatedCard || SITE.ogImage;
 ---
 
 <BaseLayout title={detail.title} description={description} ogImage={ogImage} ogType="article" hasMath={containsMath(entry.body)}>
     <div class="flex justify-between items-center mb-4">
-        <BackLink href={detail.backHref} label={collection} />
+        <BackLink href={detail.backHref} label={collectionPath(collection)} />
         {detail.externalUrl && (
             <a href={detail.externalUrl} target="_blank" rel="noopener noreferrer" class="link">
                 View external

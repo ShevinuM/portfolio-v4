@@ -872,19 +872,50 @@ html.theme-switching *::after {
     mix-blend-mode: normal;
 }
 
+/* Entrance animation for the page body, replayed on every client-side
+   navigation because .main-body is rebuilt by the swap.
+
+   Keep this short. The content starts at opacity 0, so the duration is dead
+   time added to every single click: at half a second it read as the site being
+   slow rather than as motion. 180ms is long enough to register as a transition
+   and short enough that the page is legible about as fast as the eye moves to
+   it. The offset is small for the same reason — a 10px slide over 180ms is a
+   jerk rather than a glide. */
 .animate-in {
-    animation: fadeIn 0.5s ease-out forwards;
+    animation: fadeIn 0.18s ease-out forwards;
 }
 
 @keyframes fadeIn {
     from {
         opacity: 0;
-        transform: translateY(10px);
+        transform: translateY(4px);
     }
 
     to {
         opacity: 1;
         transform: translateY(0);
+    }
+}
+
+/* Staggered entrance for the tag cloud. This lives here rather than in a
+   scoped <style> on the tags page so that every route ships a byte-identical
+   stylesheet: ClientRouter only reuses the existing <style>/<link> when the
+   new document's copy is an equal node, and one page-specific rule was enough
+   to force a full re-parse of the whole sheet on the way in and out of /tags. */
+.stagger-fade-in > * {
+    opacity: 0;
+    animation: scaleIn 0.25s ease-out forwards;
+}
+
+@keyframes scaleIn {
+    from {
+        opacity: 0;
+        transform: scale(0.95);
+    }
+
+    to {
+        opacity: 1;
+        transform: scale(1);
     }
 }
 

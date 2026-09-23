@@ -1,11 +1,11 @@
 import type { SiteConfig, ThemeConfig, SettingsConfig, UmamiAnalyticsConfig, AnalyticsConfig } from "../types";
 
 export const SITE: SiteConfig = {
-    website: "https://shevinum.dev",
+    website: "https://shevinunawalage.com",
     author: "Shevinu Nawalage",
     desc: "Software Engineer. I love theoretical fields and designing complex systems bridging science and software.",
     title: "Shevinu Nawalage",
-    ogImage: "/og-portfolio.png",
+    ogImage: "/og/site.png",
     postPerPage: 5,
     favicon: "/favicon.svg",
     lang: "en",
