@@ -60,7 +60,7 @@ The Forecasting Research Institute published results from a panel of 339 AI expe
 >
 > *(The Longitudinal Expert AI Panel [11])*
 
-Here are a few sources supporting my view on LLMs being an unreliable path towards AGI:
+I could spend days writing about this topic but this belongs to another post. I'm citing a few sources I found convincing on the alternative view on this debate. 
 
 1. [The Association for the Advancement of Artificial Intelligence](https://aaai.org) 2025 Presidential Panel on the Future of AI Research report surveyed 475 AI researchers and 76% said that scaling up current AI approaches is "unlikely" or "very unlikely" to reach AGI [7].
 2. Meta's former chief AI scientist Dr. Yann LeCun (who is also a Turing Award winner) called the AGI narrative a distraction [4] and explained why LLMs will not lead to AGI [8].
